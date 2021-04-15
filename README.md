@@ -8,7 +8,7 @@ Jpwrt is free and Open Source software distributed under the Apache-2.0 license.
 
 Jpwrt is developed based on the Jsnpp framework. If you want to know more about Jsnpp, you can [get it here](http://www.jsnpp.com).
 
-# How to read? #
+## How to read? ##
 
 Jpwrt should be pronounced "JP write", which means a writing system developed by the Jsnpp framework. 
 
