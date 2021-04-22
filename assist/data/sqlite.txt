@@ -1,0 +1,186 @@
+CREATE TABLE JPWRT_users(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   username VARCHAR(50) DEFAULT '',
+   password VARCHAR(64) DEFAULT '',
+   nickname VARCHAR(50) DEFAULT '',
+   firstname VARCHAR(50) DEFAULT '',
+   lastname VARCHAR(50) DEFAULT '',
+   publicname VARCHAR(50) DEFAULT '',
+   email VARCHAR(100) DEFAULT '',
+   url VARCHAR(100) DEFAULT '',
+   avatar VARCHAR(255) DEFAULT '',
+   gender SMALLINT DEFAULT 0,
+   birthday DATE,
+   signature TEXT DEFAULT '',
+   createtime DATETIME DEFAULT '1000-01-01 00:00:00',
+   lastime DATETIME DEFAULT '1000-01-01 00:00:00',
+   lastip VARCHAR(255) DEFAULT '',
+   activation VARCHAR(60) DEFAULT '',
+   randomcode VARCHAR(60) DEFAULT '',
+   status INT NOT NULL DEFAULT 1,
+   usertype VARCHAR(50) NOT NULL DEFAULT '',
+   language VARCHAR(100) DEFAULT '',
+   integral INT NOT NULL DEFAULT 0,
+   posts INT NOT NULL DEFAULT 0,
+   comments INT NOT NULL DEFAULT 0,
+   mobile VARCHAR(20) DEFAULT '',
+   school VARCHAR(200) DEFAULT '',
+   qq VARCHAR(200) DEFAULT '',
+   weibo VARCHAR(200) DEFAULT '',
+   wechat VARCHAR(200) DEFAULT '',
+   facebook VARCHAR(200) DEFAULT '',
+   twitter VARCHAR(200) DEFAULT '',
+   skype VARCHAR(200) DEFAULT '',
+   line VARCHAR(200) DEFAULT ''
+);
+CREATE TABLE JPWRT_take(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   takename VARCHAR(50) DEFAULT '',
+   takevalue TEXT DEFAULT '',
+   taketype VARCHAR(30) DEFAULT '',
+   backstage VARCHAR(30) DEFAULT ''
+);
+CREATE TABLE JPWRT_categories(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(100) DEFAULT '',
+   slug VARCHAR(100) DEFAULT '',
+   keyword VARCHAR(100) DEFAULT '',
+   template VARCHAR(100) DEFAULT '',
+   sort INT NOT NULL DEFAULT 0,
+   parent INT NOT NULL DEFAULT 0,
+   description TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_tags(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(100) DEFAULT '',
+   slug VARCHAR(100) DEFAULT '',
+   keyword VARCHAR(100) DEFAULT '',
+   template VARCHAR(100) DEFAULT '',
+   quantity INT NOT NULL DEFAULT 0,
+   description TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_postags(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   pid INT NOT NULL DEFAULT 0,
+   tid INT NOT NULL DEFAULT 0
+);
+CREATE TABLE JPWRT_posts(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   uid INT NOT NULL DEFAULT 0,
+   cid INT NOT NULL DEFAULT 0,
+   title VARCHAR(100) DEFAULT '',
+   slug VARCHAR(100) DEFAULT '',
+   keyword VARCHAR(100) DEFAULT '',
+   template VARCHAR(100) DEFAULT '',
+   source VARCHAR(300) DEFAULT '',
+   thumbnail VARCHAR(300) DEFAULT '',
+   comment INT NOT NULL DEFAULT 0,
+   views INT NOT NULL DEFAULT 0,
+   likes INT NOT NULL DEFAULT 0,
+   dislikes INT NOT NULL DEFAULT 0,
+   createtime DATETIME DEFAULT '1000-01-01 00:00:00',
+   editime DATETIME DEFAULT '1000-01-01 00:00:00',
+   recommend TINYINT NOT NULL DEFAULT 0,
+   top TINYINT NOT NULL DEFAULT 0,
+   commentsoff TINYINT NOT NULL DEFAULT 0,
+   visibility SMALLINT NOT NULL DEFAULT 0,
+   password VARCHAR(64) DEFAULT '',
+   status TINYINT NOT NULL DEFAULT 0,
+   trash TINYINT NOT NULL DEFAULT 0,
+   trashuid INT DEFAULT 0,
+   summary TEXT DEFAULT '',
+   content TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_pages(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   title VARCHAR(100) DEFAULT '',
+   slug VARCHAR(100) DEFAULT '',
+   keyword VARCHAR(100) DEFAULT '',
+   template VARCHAR(100) DEFAULT '',
+   thumbnail VARCHAR(300) DEFAULT '',
+   views INT NOT NULL DEFAULT 0,
+   createtime DATETIME DEFAULT '1000-01-01 00:00:00',
+   editime DATETIME DEFAULT '1000-01-01 00:00:00',
+   visibility SMALLINT NOT NULL DEFAULT 0,
+   password VARCHAR(64) DEFAULT '',
+   status TINYINT NOT NULL DEFAULT 0,
+   parent INT NOT NULL DEFAULT 0,
+   sort INT NOT NULL DEFAULT 0,
+   summary TEXT DEFAULT '',
+   content TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_menu(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(100) DEFAULT '',
+   slug VARCHAR(100) DEFAULT '',
+   sort INT NOT NULL DEFAULT 0,
+   parent INT NOT NULL DEFAULT 0,
+   icon VARCHAR(300) DEFAULT '',
+   url VARCHAR(300) DEFAULT ''
+);
+CREATE TABLE JPWRT_slide(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(100) DEFAULT '',
+   gid INT NOT NULL DEFAULT 0,
+   sort INT NOT NULL DEFAULT 0,
+   image VARCHAR(300) DEFAULT '',
+   url VARCHAR(300) DEFAULT '',
+   description TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_slidegroup(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(100) DEFAULT '',
+   slug VARCHAR(100) DEFAULT '',
+   width INT NOT NULL DEFAULT 0,
+   height INT NOT NULL DEFAULT 0,
+   description TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_links(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(100) DEFAULT '',
+   sort INT NOT NULL DEFAULT 0,
+   image VARCHAR(300) DEFAULT '',
+   url VARCHAR(300) DEFAULT '',
+   home TINYINT NOT NULL DEFAULT 0,
+   description TEXT DEFAULT ''
+);
+CREATE TABLE JPWRT_comments(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   uid INT NOT NULL DEFAULT 0,
+   pid INT NOT NULL DEFAULT 0,
+   createtime DATETIME DEFAULT '1000-01-01 00:00:00',
+   editime DATETIME DEFAULT '1000-01-01 00:00:00',
+   parent INT NOT NULL DEFAULT 0,
+   status TINYINT NOT NULL DEFAULT 0,
+   publicname VARCHAR(50) DEFAULT '',
+   email VARCHAR(100) DEFAULT '',
+   comment TEXT DEFAULT ''
+);
+CREATE INDEX username_users ON JPWRT_users (username);
+CREATE INDEX email_users ON JPWRT_users (email);
+CREATE INDEX integral_users ON JPWRT_users (integral);
+CREATE INDEX mobile_users ON JPWRT_users (mobile);
+CREATE UNIQUE INDEX takename_take ON JPWRT_take (takename);
+CREATE INDEX slug_categories ON JPWRT_categories (slug);
+CREATE INDEX sort_categories ON JPWRT_categories (sort);
+CREATE INDEX name_tags ON JPWRT_tags (name);
+CREATE INDEX slug_tags ON JPWRT_tags (slug);
+CREATE INDEX quantity_tags ON JPWRT_tags (quantity);
+CREATE INDEX pid_postags ON JPWRT_postags (pid);
+CREATE INDEX tid_postags ON JPWRT_postags (tid);
+CREATE INDEX uid_posts ON JPWRT_posts (uid);
+CREATE INDEX cid_posts ON JPWRT_posts (cid);
+CREATE INDEX slug_posts ON JPWRT_posts (slug);
+CREATE INDEX comment_posts ON JPWRT_posts (comment);
+CREATE INDEX views_posts ON JPWRT_posts (views);
+CREATE INDEX top_posts ON JPWRT_posts (top);
+CREATE INDEX slug_pages ON JPWRT_pages (slug);
+CREATE INDEX sort_pages ON JPWRT_pages (sort);
+CREATE INDEX slug_menu ON JPWRT_menu (slug);
+CREATE INDEX sort_menu ON JPWRT_menu (sort);
+CREATE INDEX gid_slide ON JPWRT_slide (gid);
+CREATE INDEX sort_slide ON JPWRT_slide (sort);
+CREATE INDEX slug_slidegroup ON JPWRT_slidegroup (slug);
+CREATE INDEX sort_links ON JPWRT_links (sort);
+CREATE INDEX uid_comments ON JPWRT_comments (uid);
+CREATE INDEX pid_comments ON JPWRT_comments (pid);

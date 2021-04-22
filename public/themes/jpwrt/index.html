@@ -1,0 +1,66 @@
+{include header}
+{notempty $slide}
+<div id="carousel" class="carousel slide mb-3" data-ride="carousel">
+    <ol class="carousel-indicators">
+        {each $item in $slide}
+        <li data-target="#carousel" data-slide-to="{$order - 1}"{if($order == 1)} class="active"{endif}></li>
+        {endeach}
+    </ol>
+    <div class="carousel-inner">
+        {each $item in $slide}
+        <div class="carousel-item{if($order == 1)} active{endif}">
+            <a href="{$item.url}"><img src="{$item.image}" class="d-block w-100"></a>
+            <div class="carousel-caption d-none d-md-block">
+                <h5>{$item.name}</h5>
+                <p>{$item.description}</p>
+            </div>
+        </div>
+        {endeach}
+    </div>
+    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">{lang('Previous')}</span>
+    </a>
+    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">{lang('Next')}</span>
+    </a>
+</div>
+{endnotempty}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-12 col-lg-9">
+            {$homeTop}
+            {each $item in $posts.data}
+            <div class="card mb-3 border-0">
+                <div class="card-body">
+                    <div class="h5 font-weight-bold">
+                        <a class="text-success" href="{$item.url}">{$item.title}</a>
+                    </div>
+                    <div class="text-secondary">
+                        {notempty $item.thumbnail}
+                        <img src="{$item.thumbnail}" class="float-right ml-3 rounded img-fluid" width="100">
+                        {endnotempty}
+                        {$item.summary}
+                    </div>
+                </div>
+                <div class="card-footer text-muted bg-white py-1">
+                    <small>
+                        {lang('Author')}: {$item.publicname}
+                    </small>
+                    <small class="ml-2">
+                        {lang('Publish time')}: {$item.createtime|dateFormat($language)}
+                    </small>
+                    <small class="ml-2">
+                        {lang('Views')}: {$item.views}
+                    </small>
+                </div>
+            </div>
+            {endeach}
+            <div>{$posts.paging}</div>
+            {$homeBottom}
+        </div>
+        <div class="col-12 col-lg-3">{include side}</div>
+    </div>
+</div>
+{include footer}

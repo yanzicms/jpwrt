@@ -1,0 +1,35 @@
+{notempty $links}
+<div class="container-fluid bg-white p-3 mb-3">
+    <div class="row">
+        <div class="col">
+            {each $item in $links}
+            {empty $item.image}
+            <a class="btn btn-outline-secondary btn-sm my-1" href="{$item.url}" target="_blank">{$item.name}</a>
+            {else}
+            <a class="my-1" href="{$item.url}" target="_blank"><img src="{$item.image}"></a>
+            {endempty}
+            {endeach}
+        </div>
+    </div>
+</div>
+{endnotempty}
+<div class="container-fluid bg-white p-3">
+    <div class="row">
+        <div class="col-12 col-md-4">
+            {$filing}{$customcode}
+        </div>
+        <div class="col-6 col-md-4 order-md-first">
+            <div class="text-secondary">
+                {$siteName}
+            </div>
+        </div>
+        <div class="col-6 col-md-4 text-secondary">
+            <div class="float-right">
+                {lang('Proudly powered by ')} <a class="text-secondary" href="http://www.jpwrt.com" target="_blank">Jpwrt</a>
+            </div>
+        </div>
+    </div>
+</div>
+{$footer}
+</body>
+</html>

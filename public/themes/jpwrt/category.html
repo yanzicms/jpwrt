@@ -1,0 +1,39 @@
+{include header}
+{include breadcrumb}
+<div class="container my-3">
+    <div class="row">
+        <div class="col-12 col-lg-9">
+            {$categoryTop}
+            {each $item in $posts.data}
+            <div class="card mb-3 border-0">
+                <div class="card-body">
+                    <div class="h5 font-weight-bold">
+                        <a class="text-success" href="{$item.url}">{$item.title}</a>
+                    </div>
+                    <div class="text-secondary">
+                        {notempty $item.thumbnail}
+                        <img src="{$item.thumbnail}" class="float-right ml-3 rounded img-fluid" width="100">
+                        {endnotempty}
+                        {$item.summary}
+                    </div>
+                </div>
+                <div class="card-footer text-muted bg-white py-1">
+                    <small>
+                        {lang('Author')}: {$item.publicname}
+                    </small>
+                    <small class="ml-2">
+                        {lang('Publish time')}: {$item.createtime|dateFormat($language)}
+                    </small>
+                    <small class="ml-2">
+                        {lang('Views')}: {$item.views}
+                    </small>
+                </div>
+            </div>
+            {endeach}
+            <div>{$posts.paging}</div>
+            {$categoryBottom}
+        </div>
+        <div class="col-12 col-lg-3">{include side}</div>
+    </div>
+</div>
+{include footer}

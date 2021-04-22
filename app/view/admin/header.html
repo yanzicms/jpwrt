@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>JPWRT</title>
+    <link rel="icon" href="{$webroot}public/static/images/favicon.ico">
+    <link rel="stylesheet" href="{$webroot}public/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{$webroot}public/static/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="{$webroot}public/static/css/jsnpp.css">
+    <script src="{$webroot}public/static/js/jquery.min.js"></script>
+    <script src="{$webroot}public/static/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+<div class="container-fluid">
+    <div class="row">
+        <div class="bg-dark jsnpp_side" id="jsnpp_side">
+            <div class="sticky-top pb-3">
+                <div class="display-4 text-center px-2 text-white font-weight-bold">JPWRT</div>
+                {include side}
+            </div>
+        </div>
+        <div class="col">
+            <div class="clearfix jpwrt_brow">
+                <div class="float-left"><i class="bi bi-list hand h4" id="jsnpp_switch"></i></div>
+                <div class="btn-group dropleft float-right">
+                    <i class="bi bi-gear hand h4" data-toggle="dropdown"></i>
+                    <div class="dropdown-menu">
+                        <div class="px-4 mb-2">{lang('Howdy')}, {$user}</div>
+                        <a class="dropdown-item" href="{url('admin/profile')}"><i class="bi bi-person-plus mr-2"></i>{lang('Edit profile')}</a>
+                        {if($author)}
+                        <a class="dropdown-item" href="{url('admin/addnewpost')}"><i class="bi bi-pencil-square mr-2"></i>{lang('Add new post')}</a>
+                        {endif}
+                        {if($administrator)}
+                        <a class="dropdown-item" href="{url('admin/clearcache')}"><i class="bi bi-trash mr-2"></i>{lang('Clear cache')}</a>
+                        {endif}
+                        <a class="dropdown-item" target="_blank" href="{url('/')}"><i class="bi bi-house-door mr-2"></i>{lang('Home page')}</a>
+                        <a class="dropdown-item" href="{url('signout')}"><i class="bi bi-box-arrow-right mr-2"></i>{lang('Sign out')}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 position-relative jpwrt_minhei">

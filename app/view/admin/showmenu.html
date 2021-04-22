@@ -1,0 +1,40 @@
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col"><a href="#!" id="menureload" class="text-info" data-menutype="{$menutype}">{lang('Order')}</a><i class="bi bi-question-octagon ml-1" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="{lang('The smallest number is at the front.')}"></i></th>
+            <th scope="col">{lang('Name ')}</th>
+            <th scope="col">{lang('Icon')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $menu}
+        <tr>
+            <th scope="row" class="align-middle">{$order}</th>
+            <td class="align-middle">
+                <div class="form-group my-auto">
+                    <input type="text" class="form-control orderclass" value="{$item.sort}" data-id="{$item.id}" style="width: 4rem">
+                </div>
+            </td>
+            <td class="align-middle">{$item.level}{$item.name}</td>
+            <td class="align-middle">
+                <div class="form-group my-auto">
+                    <input type="text" class="form-control iconclass" value="{$item.icon}" data-id="{$item.id}" style="width: 10rem">
+                </div>
+            </td>
+            <td class="align-middle">
+                <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.name}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<script src="{$webroot}public/static/js/showmenu.js"></script>

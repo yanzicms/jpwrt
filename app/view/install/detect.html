@@ -1,0 +1,43 @@
+{include header}
+<div class="container">
+    <div class="row justify-content-center vh-100">
+        <div class="align-self-center">
+            {include institle}
+            <div class="mt-5" id="checking" data-next="{url('install/dbinfo')}">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-grow text-info">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <small class="form-text text-muted">{lang('Checking the environment, please wait...')}</small>
+                </div>
+            </div>
+            <div class="mt-4 d-none" id="detectresult">
+                <p>{lang('Please make sure that the server meets the following conditions to continue')}</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">{lang('Test content')}</th>
+                        <th scope="col">{lang('Current situation')}</th>
+                        <th scope="col">{lang('System Requirements')}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr t-for="item in detect">
+                        <th scope="row">{{key}}</th>
+                        <td>{{item.content}}</td>
+                        <td>{{item.situation}}</td>
+                        <td>{{item.requirement}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="text-center" id="redetect">
+                    <a class="btn btn-outline-success rounded-circle" href="{url('install/detect')}" role="button"><i class="bi bi-arrow-repeat"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include footer}

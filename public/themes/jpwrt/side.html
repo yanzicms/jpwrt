@@ -1,0 +1,76 @@
+{$sideTop}
+<div class="card mb-3 border-0">
+    <div class="card-body">
+        <form class="form-inline my-2 my-lg-0" method="get" action="{url('index/search')}">
+            <div class="input-group">
+                <input type="text" class="form-control" name="keyword" placeholder="{lang('Keyword')}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-success" type="submit" id="search">{lang('Search')}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card mb-3 border-0">
+    <div class="card-header bg-white py-2">
+        {lang('Welcome')}
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            {if($logged)}
+            <div class="col-6">
+                <small class="text-secondary">{lang('Hello')}: {$user}</small>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-outline-secondary btn-sm" href="{url('signout')}" role="button">{lang('Sign out')}</a>
+            </div>
+            {else}
+            {if($membership == 1)}
+            <div class="col-6">
+                <a class="btn btn-outline-success btn-sm" href="{url('register')}" role="button">{lang('No account')}</a>
+            </div>
+            {endif}
+            <div class="col-6">
+                <a class="btn btn-outline-success btn-sm" href="{url('login')}" role="button">{lang('Log in')}</a>
+            </div>
+            {endif}
+        </div>
+    </div>
+</div>
+{notempty $recommend}
+<div class="card mb-3 border-0">
+    <div class="card-header bg-white py-2">
+        {lang('Recommend')}
+    </div>
+    <div class="card-body">
+        {each $item in $recommend}
+        <a class="btn btn-outline-success btn-sm my-1 w-100" href="{$item.url}" role="button">{$item.title}<span class="badge badge-light ml-2">{$item.views}</span></a>
+        {endeach}
+    </div>
+</div>
+{endnotempty}
+{notempty $tags}
+<div class="card mb-3 border-0">
+    <div class="card-header bg-white py-2">
+        {lang('Tags')}
+    </div>
+    <div class="card-body">
+        {each $item in $tags}
+        <a class="btn btn-outline-success btn-sm my-1" href="{$item.url}" role="button">{$item.name}<span class="badge badge-light">{$item.quantity}</span></a>
+        {endeach}
+    </div>
+</div>
+{endnotempty}
+{notempty $archive}
+<div class="card mb-3 border-0">
+    <div class="card-header bg-white py-2">
+        {lang('Archive')}
+    </div>
+    <div class="card-body">
+        {each $item in $archive}
+        <a class="btn btn-outline-success btn-sm my-1 w-100" href="{$item.url}" role="button">{$item.time}<span class="badge badge-light ml-2">{$item.quantity}</span></a>
+        {endeach}
+    </div>
+</div>
+{endnotempty}
+{$sideBottom}

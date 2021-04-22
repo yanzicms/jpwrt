@@ -1,0 +1,56 @@
+<form>
+    <div class="form-group">
+        <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="name" name="name" value="{$slide.name}" maxlength="100">
+    </div>
+    <div class="form-group">
+        <label>{lang('Image')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <div id="uploadimgdiv">
+            <button type="button" id="uploadimg" class="btn btn-outline-info btn-sm px-4 rounded-pill">
+                {lang('Choose a image')}
+                <div class="spinner-border spinner-border-sm text-info d-none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </button>
+        </div>
+        <div class="mt-2 d-none" id="imgdiv"><img src="{if($slide.image != '')}{$webroot}{$slide.image}{endif}" class="img-fluid"></div>
+        <div class="mt-2 d-none" id="delimgdiv">
+            <a id="delimg" href="#!" class="text-info ml-2" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}"><i class="bi bi-trash mr-1"></i>
+                {lang('Delete')}
+                <div class="spinner-border spinner-border-sm text-info d-none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="slidegroup">{lang('Slide group')}</label>
+        <select class="custom-select" id="slidegroup" name="slidegroup">
+            <option value="0">{lang('None')}</option>
+            {each $item in $slidegroup}
+            <option value="{$item.id}"{if($slide.gid == $item.id)} selected="selected"{endif}>{$item.name}</option>
+            {endeach}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="url">{lang('URL')}</label>
+        <input type="text" class="form-control" id="url" name="url" value="{$slide.url}" maxlength="300">
+    </div>
+    <div class="form-group">
+        <label for="description">{lang('Description')}</label>
+        <textarea class="form-control" id="description" name="description" rows="3">{$slide.description}</textarea>
+    </div>
+    <input type="hidden" name="id" id="id" value="{$slide.id}">
+    <button type="button" id="editslidesubmit" class="btn btn-outline-info mb-3" data-content="{lang('Slide modified successfully!')}">
+        {lang('Save')}
+        <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+</form>
+<div class="d-none">
+    <div id="editpost_uploadimgedit">{url('admin/uploadimgeditslide')}</div>
+    <div id="editpost_deleteimgedit">{url('admin/deleteimgeditslide')}</div>
+</div>
+<script src="{$webroot}public/static/js/uploadfile.js"></script>
+<script src="{$webroot}public/static/js/editslide.js"></script>

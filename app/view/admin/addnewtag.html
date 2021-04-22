@@ -1,0 +1,43 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('Add new tag')}</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/alltags')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('All tags')}</a>
+</div>
+<div class="clearfix"></div>
+<div class="mb-3 text-secondary"><small>{lang('Items marked with ')}<i class="bi bi-asterisk"></i>{lang(' are required')}</small></div>
+<div>
+    <form>
+        <div class="form-group">
+            <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <input type="text" class="form-control" id="name" name="name" maxlength="100">
+            <small class="form-text text-muted">{lang('The name is how it appears on your site.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="slug">{lang('Slug')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <input type="text" class="form-control" id="slug" name="slug" maxlength="100">
+            <small class="form-text text-muted">{lang('The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="description">{lang('Description')}</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            <small class="form-text text-muted">{lang('The description is not prominent by default; however, some themes may show it.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="template">{lang('Associated template')}</label>
+            <select class="custom-select" id="template" name="template">
+                <option value="">{lang('None')}</option>
+                {each $item in $templates}
+                <option value="{$item.name}">{$item.name}{$item.description}</option>
+                {endeach}
+            </select>
+            <small class="form-text text-muted">{lang('You can associate template files in the tags directory of the current theme.')} {lang('There are no associated templates in some themes.')}</small>
+        </div>
+        <button type="button" id="submit" class="btn btn-outline-info reload">
+            {lang('Save')}
+            <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </button>
+    </form>
+</div>
+{include footer}

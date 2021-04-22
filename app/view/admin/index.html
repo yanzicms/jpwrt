@@ -1,0 +1,147 @@
+{include header}
+<div class="mb-3 h4">{lang('Dashboard')}</div>
+{if($administrator && $dashboardguide == 1)}
+<div class="card mb-3" id="dashboardguide">
+    <div class="card-body">
+        <div class="float-right">
+            <button type="button" class="close" aria-label="Close" id="dismiss" data-url="{url('admin/dismiss')}">
+                <span class="h6"><small>{lang('Dismiss')}</small><span class="h4">&times;</span></span>
+            </button>
+        </div>
+        <div class="h5">{lang('Welcome to Jpwrt!')}</div>
+        <div class="mb-3"><small class="text-secondary">{lang('We’ve assembled some links to get you started:')}</small></div>
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="mb-3">{lang('Get Started')}</div>
+                <div class="mb-3">
+                    <a class="btn btn-outline-info px-4" href="{url('admin/visit')}" role="button">{lang('Set up your site')}</a>
+                </div>
+                <div><small class="text-secondary">{lang('or')}, <a class="text-info" href="{url('admin/themes')}">{lang('change your theme completely')}</a></small></div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="mb-3">{lang('Next Steps')}</div>
+                <div>
+                    <div class="mb-1"><a class="text-info" href="{url('admin/addnewcategory')}"><i class="bi bi-layout-wtf mr-2 text-secondary"></i>{lang('Add a post category')}</a></div>
+                    <div class="mb-1"><a class="text-info" href="{url('admin/addnewpost')}"><i class="bi bi-pencil-square mr-2 text-secondary"></i>{lang('Write your blog post')}</a></div>
+                    <div class="mb-1"><a class="text-info" href="{url('admin/addnewpage')}"><i class="bi bi-plus-square mr-2 text-secondary"></i>{lang('Add an About page')}</a></div>
+                    <div class="mb-1"><a class="text-info" target="_blank" href="{url('/')}"><i class="bi bi-laptop mr-2 text-secondary"></i>{lang('View your site')}</a></div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="mb-3">{lang('More Actions')}</div>
+                <div>
+                    <div class="mb-1"><a class="text-info" href="{url('admin/menus')}"><i class="bi bi-menu-button-wide mr-2 text-secondary"></i>{lang('Manage menus')}</a></div>
+                    <div class="mb-1"><a class="text-info" href="{url('admin/comments')}"><i class="bi bi-chat-left-text mr-2 text-secondary"></i>{lang('Manage comments')}</a></div>
+                    <div class="mb-1"><a class="text-info" href="{url('admin/discussion')}"><i class="bi bi-chat-left-dots mr-2 text-secondary"></i>{lang('Turn comments on or off')}</a></div>
+                    <div class="mb-1"><a class="text-info" href="http://www.jpwrt.com" target="_blank"><i class="bi bi-book mr-2 text-secondary"></i>{lang('Learn more about getting started')}</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{endif}
+<div class="row">
+    <div class="col-12 col-md-6">
+        {if($editor)}
+        <div class="card mb-3">
+            <div class="card-header py-2 bg-white">
+                {lang('At a Glance')}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="mb-1"><a class="text-info" href="{url('admin/allposts')}"><i class="bi bi-file-earmark-text mr-2 text-secondary"></i>{$totalposts} {lang(' Posts')}</a></div>
+                        <div class="mb-1"><a class="text-info" href="{url('admin/comments')}"><i class="bi bi-chat-left-text mr-2 text-secondary"></i>{$totalcomments} {lang(' Comments')}</a></div>
+                    </div>
+                    {if($editor)}
+                    <div class="col-12 col-md-6">
+                        <div class="mb-1"><a class="text-info" href="{url('admin/allpages')}"><i class="bi bi-journals mr-2 text-secondary"></i>{$totalpages} {lang(' Pages')}</a></div>
+                    </div>
+                    {endif}
+                </div>
+                <div class="text-secondary">Jpwrt {$version} {lang(' running')}<a href="{url('admin/themes')}" class="text-info">{$usedtheme}</a>{lang(' theme.')}</div>
+            </div>
+        </div>
+        {endif}
+        <div class="card mb-3">
+            <div class="card-header py-2 bg-white">
+                {lang('Activity')}
+            </div>
+            <div class="card-body">
+                <div class="mb-2">{lang('Recently Published')}</div>
+                <div class="mb-2">
+                    {each $item in $posts}
+                    <div><a class="text-secondary" href="{url('admin/editpost', ['id' => $item.id])}"><small>{$item.title}</small></a></div>
+                    <div class="mb-2 text-secondary"><small>-- {$item.createtime|dateFormat($language)}</small></div>
+                    {endeach}
+                </div>
+                <div class="mb-2 pt-2 border-top">{lang('Recent Comments')}</div>
+                <div class="mb-2">
+                    {each $item in $comments}
+                    <div class="text-secondary"><small>{$item.comment}</small></div>
+                    <div class="mb-2 text-secondary"><small>-- {$item.createtime|dateFormat($language)}</small></div>
+                    {endeach}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        {if($author)}
+        <div class="card mb-3">
+            <div class="card-header py-2 bg-white">
+                {lang('Quick Draft')}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="title">{lang('Title')}</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">{lang('Content')}</label>
+                        <textarea class="form-control" rows="5" id="content" name="content" placeholder="{lang('What’s on your mind?')}"></textarea>
+                    </div>
+                    <button type="button" id="submit" data-action="{url('admin/draft')}" class="btn btn-outline-info reload">
+                        {lang('Save Draft')}
+                        <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {endif}
+        <div class="card mb-3">
+            <div class="card-header py-2 bg-white">
+                {lang('Jpwrt Events and News')}
+            </div>
+            <div class="card-body">
+                <div id="eventsnews">
+                    <div t-for="item in events">
+                        <a class="text-info" target="_blank" href="{{item.url}}"><small>{{item.title}}</small></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer py-2 bg-white text-muted">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link py-0" target="_blank" href="http://www.jpwrt.com">JPWRT<i class="bi bi-box-arrow-up-right ml-2"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-0" target="_blank" href="http://www.jsnpp.com">JSNPP<i class="bi bi-box-arrow-up-right ml-2"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-0" target="_blank" href="https://github.com/yanzicms/jpwrt">Github<i class="bi bi-box-arrow-up-right ml-2"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-none">
+    <div id="events">{url('admin/events')}</div>
+</div>
+<script src="{$webroot}public/static/js/twoway.min.js"></script>
+<script src="{$webroot}public/static/js/index.js"></script>
+{include footer}

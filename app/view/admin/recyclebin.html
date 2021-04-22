@@ -1,0 +1,69 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('All posts')}</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewpost')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('Add new post')}</a>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Title')}</th>
+            <th scope="col">{lang('Author')}</th>
+            <th scope="col">{lang('Categories')}</th>
+            <th scope="col">{lang('Views')}</th>
+            <th scope="col">{lang('Comments')}</th>
+            <th scope="col">{lang('Date')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $posts.data}
+        <tr>
+            <th scope="row">{($posts.page - 1) * $posts.per + $order}</th>
+            <td class="align-middle">
+                <div>
+                    {if $item.thumbnail != ''}<img src="{$webroot}{$item.thumbnail}" height="35">{endif}
+                    <a class="text-secondary" href="{url('admin/editpost', ['id' => $item.id])}">{$item.title}</a>
+                    <small>
+                        {if $item.status == 0}<span class="text-secondary"> - {lang('Draft')}</span>{elseif $item.status == 1}<span class="text-secondary"> - {lang('Pending review')}</span>{elseif $item.status == 2}<span class="text-secondary"> - {lang('The review failed')}</span>{endif}
+                    </small>
+                </div>
+                <div class="mt-2">
+                    <small>
+                        <a href="#!" class="mx-1 text-info restore" data-id="{$item.id}" data-name="{$item.title}" data-title="{lang('Are you sure you want to restore?')}" data-alert="{lang('If you want to restore, please press the “OK” button.')}">
+                            <i class="bi bi-reply-fill mr-1"></i>{lang('Restore')}
+                            <div class="spinner-border spinner-border-sm text-info d-none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </a>
+                        <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.title}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                            <i class="bi bi-trash mr-1"></i>{lang('Delete Permanently')}
+                            <div class="spinner-border spinner-border-sm text-info d-none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </a>
+                    </small>
+                </div>
+            </td>
+            <td class="align-middle text-secondary">{$item.username}</td>
+            <td class="align-middle text-secondary">{$item.name}</td>
+            <td class="align-middle text-secondary">{$item.views}</td>
+            <td class="align-middle text-secondary">{$item.comment}</td>
+            <td class="align-middle text-secondary">
+                <div>
+                    <small>
+                        {if $item.status == 3}<span class="text-secondary">{lang('Published')}</span>{else}<span class="text-secondary">{lang('Last Modified')}</span>{endif}
+                    </small>
+                </div>
+                <div>
+                    {$item.createtime|dateFormat($language)}
+                </div>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div>{$posts.paging}</div>
+<script src="{$webroot}public/static/js/recyclebin.js"></script>
+{include footer}

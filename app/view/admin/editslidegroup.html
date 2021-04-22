@@ -1,0 +1,33 @@
+<form>
+    <div class="form-group">
+        <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="name" name="name" value="{$slidegroup.name}" maxlength="100">
+    </div>
+    <div class="form-group">
+        <label for="slug">{lang('Slug')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="slug" name="slug" value="{$slidegroup.slug}" maxlength="100">
+        <small class="form-text text-muted">{lang('The slug can only contain letters, numbers and hyphens.')}</small>
+    </div>
+    <div class="form-group">
+        <label for="width">{lang('Width')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="width" name="width" value="{$slidegroup.width}">
+        <small class="form-text text-muted">{lang('Please fill in an integer.')}</small>
+    </div>
+    <div class="form-group">
+        <label for="height">{lang('Height')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="height" name="height" value="{$slidegroup.height}">
+        <small class="form-text text-muted">{lang('Please fill in an integer.')}</small>
+    </div>
+    <div class="form-group">
+        <label for="description">{lang('Description')}</label>
+        <textarea class="form-control" id="description" name="description" rows="3">{$slidegroup.description}</textarea>
+    </div>
+    <input type="hidden" name="id" value="{$slidegroup.id}">
+    <button type="button" id="editslidegroupsubmit" class="btn btn-outline-info mb-3" data-content="{lang('Slide group modified successfully!')}">
+        {lang('Save')}
+        <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+</form>
+<script src="{$webroot}public/static/js/editslidegroup.js"></script>

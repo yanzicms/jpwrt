@@ -1,0 +1,67 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('Slide group')}</div>
+<div class="float-left ml-3">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewslidegroup')}" role="button" data-toggle="modal" data-target="#contentmodal" data-name="{lang('Add new slide group')}" data-url="addnewslidegroup"><i class="bi bi-plus mr-1"></i>{lang('Add new slide group')}</a>
+</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/slideshow')}" role="button"><i class="bi bi-collection-play mr-1"></i>{lang('Slideshow')}</a>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Name ')}</th>
+            <th scope="col">{lang('Slug')}</th>
+            <th scope="col">{lang('Width')}</th>
+            <th scope="col">{lang('Height')}</th>
+            <th scope="col">{lang('Description')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $slidegroup}
+        <tr>
+            <th scope="row">{$order}</th>
+            <td>{$item.name}</td>
+            <td>{$item.slug}</td>
+            <td>{$item.width}</td>
+            <td>{$item.height}</td>
+            <td>{$item.description}</td>
+            <td>
+                <a href="#!" class="mx-1 text-info" data-toggle="modal" data-target="#contentmodal" data-name="{lang('Edit')}" data-url="editslidegroup" data-id="{$item.id}">{lang('Edit')}</a>
+                <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.name}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="contentmodal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contentname"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-none" id="contentdiv"></div>
+                <div class="spinner-border spinner-border-sm text-info" id="contentload">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{lang('Close')}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{$webroot}public/static/js/slidegroup.js"></script>
+{include footer}

@@ -1,0 +1,74 @@
+{include header}
+<div class="mb-3 h4">{lang('Discussion settings')}</div>
+<div class="mt-4">
+    <form>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="allowcomments" name="allowcomments"{if($discussion.allowcomments == 1)} checked{endif}>
+                <label class="custom-control-label" for="allowcomments">{lang('Allow people to submit comments on new posts')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="nameemail" name="nameemail"{if($discussion.nameemail == 1)} checked{endif}>
+                <label class="custom-control-label" for="nameemail">{lang('Comment author must fill out name and email')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="login" name="login"{if($discussion.login == 1)} checked{endif}>
+                <label class="custom-control-label" for="login">{lang('Users must be registered and logged in to comment')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="close" name="close"{if($discussion.close == 1)} checked{endif}>
+                <label class="custom-control-label" for="close">{lang('Automatically close comments on posts older than ')}<input class="form-control form-control-sm" type="number" min="1" id="closeday" name="closeday" value="{$discussion.closeday}" style="width: 100px;display: inline-block">{lang(' days')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="opennested" name="opennested"{if($discussion.opennested == 1)} checked{endif}>
+                <label class="custom-control-label" for="opennested">{lang('Enable threaded (nested) comments ')}<input class="form-control form-control-sm" type="number" min="1" id="nested" name="nested" value="{$discussion.nested}" style="width: 100px;display: inline-block">{lang(' levels deep')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="pagingdisplay" name="pagingdisplay"{if($discussion.pagingdisplay == 1)} checked{endif}>
+                <label class="custom-control-label" for="pagingdisplay">{lang('Break comments into pages with ')}<input class="form-control form-control-sm" type="number" min="1" id="perdisplay" name="perdisplay" value="{$discussion.perdisplay}" style="width: 100px;display: inline-block">{lang(' top level comments per page and the ')}<select class="custom-select custom-select-sm" style="width: 100px;display: inline-block" name="defaultdisplay">
+                    <option value="last"{if($discussion.defaultdisplay == 'last')} selected{endif}>{lang('Last')}</option>
+                    <option value="first"{if($discussion.defaultdisplay == 'first')} selected{endif}>{lang('First')}</option>
+                </select>{lang(' page displayed by default')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="approval" name="approval"{if($discussion.approval == 1)} checked{endif}>
+                <label class="custom-control-label" for="approval">{lang('Comment must be manually approved')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="previousapproved" name="previousapproved"{if($discussion.approval == 1)} checked{endif}>
+                <label class="custom-control-label" for="previousapproved">{lang('Comment author must have a previously approved comment')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="reviewkeywords">{lang('Comment Moderation')}</label>
+            <textarea class="form-control" id="reviewkeywords" name="reviewkeywords" rows="8">{$discussion.reviewkeywords}</textarea>
+            <small class="form-text text-muted">{lang('When a comment contains any of these words in its content, author name, URL, email, IP address, or browser’s user agent string, it will be held in the moderation queue. One word or IP address per line. It will match inside words, so “wrt” will match “Jpwrt”.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="reviewkeywords">{lang('Disallowed Comment Keys')}</label>
+            <textarea class="form-control" id="rejectkeywords" name="rejectkeywords" rows="8">{$discussion.rejectkeywords}</textarea>
+            <small class="form-text text-muted">{lang('When a comment contains any of these words in its content, author name, URL, email, IP address, or browser’s user agent string, it will be discarded. One word or IP address per line. It will match inside words, so “wrt” will match “Jpwrt”.')}</small>
+        </div>
+        <button type="button" id="submit" class="btn btn-outline-info">
+            {lang('Save')}
+            <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </button>
+    </form>
+</div>
+{include footer}

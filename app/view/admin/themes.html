@@ -1,0 +1,62 @@
+{include header}
+<div class="mb-3 h4">{lang('Themes')}</div>
+<div class="row">
+    {each $item in $themes}
+    <div class="col-12 col-sm-6 col-lg-4 mb-3">
+        <div class="card">
+            <img src="{$item.screenshot}" class="card-img-top">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-7 text-truncate">
+                        <a href="#!" class="text-info" data-toggle="modal" data-target="#themeinfo" data-name="{$item.themeName}" data-themeurl="{$item.themeUrl}" data-author="{$item.author}" data-description="{$item.description}" data-version="{$item.version}" data-license="{$item.license}" data-licenseurl="{$item.licenseUrl}" data-tags="{$item.tags}" data-screenshot="{$item.screenshot}">{$item.themeName}</a>
+                    </div>
+                    <div class="col-5">
+                        {if($item.active == true)}
+                        <button type="button" class="btn btn-info btn-sm float-right" disabled>{lang('Active')}</button>
+                        {else}
+                        <button type="button" class="btn btn-outline-info btn-sm float-right activate" data-name="{$item.jpwrtheme}">
+                            {lang('Activate')}
+                            <div class="spinner-border spinner-border-sm text-secondary d-none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        {endif}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {endeach}
+</div>
+<div class="modal fade" id="themeinfo" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="themename"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-md-6" id="themeimgdiv">
+                        <img id="themeimg" src="" class="img-fluid">
+                    </div>
+                    <div class="col-12 col-md-6" id="themedescription">
+                        <div class="mb-2"><span class="font-weight-bold">{lang('Author')}:</span> <span id="author"></span></div>
+                        <div class="mb-2"><span class="font-weight-bold">{lang('Theme version')}:</span> <span id="version"></span></div>
+                        <div class="mb-2"><span class="font-weight-bold">{lang('Theme license')}:</span> <span id="license"></span></div>
+                        <div class="mb-2"><span class="font-weight-bold">{lang('License Url')}:</span> <span id="licenseurl"></span></div>
+                        <div class="mb-2"><span class="font-weight-bold">{lang('Description')}:</span> <span id="description"></span></div>
+                        <div class="mb-2"><span class="font-weight-bold">{lang('Tags')}:</span> <span id="tags"></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{lang('Close')}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{$webroot}public/static/js/themes.js"></script>
+{include footer}

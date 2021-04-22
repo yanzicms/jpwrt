@@ -1,0 +1,49 @@
+{include header}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div>
+            {include institle}
+            <form id="dbinfo">
+                <div class="form-group">
+                    <label>{lang('Database type')}</label>
+                    <select class="custom-select" id="dbselect" name="dbtype">
+                        <option value="mysql" selected>mysql</option>
+                        <option value="sqlite">sqlite</option>
+                    </select>
+                </div>
+                <div class="form-group mysql">
+                    <label for="hostname">{lang('Database address')}</label>
+                    <input type="text" class="form-control" id="hostname" name="hostname" value="localhost">
+                    <small class="form-text text-muted">{lang('Local database is generally filled with "localhost"')}</small>
+                </div>
+                <div class="form-group">
+                    <label for="database">{lang('The name of the database')}</label>
+                    <input type="text" class="form-control" id="database" name="database" value="jpwrt">
+                </div>
+                <div class="form-group mysql">
+                    <label for="username">{lang('Database username')}</label>
+                    <input type="text" class="form-control" id="username" name="username">
+                </div>
+                <div class="form-group mysql">
+                    <label for="password">{lang('Database password')}</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <div class="form-group mysql">
+                    <label for="hostport">{lang('The port number')}</label>
+                    <input type="text" class="form-control" id="hostport" name="hostport" value="3306">
+                </div>
+                <div class="form-group mysql">
+                    <label for="prefix">{lang('Table prefix')}</label>
+                    <input type="text" class="form-control" id="prefix" name="prefix" value="jpwrt_">
+                </div>
+                <div class="text-center mb-5">
+                    <button type="button" class="btn btn-outline-success rounded-circle" id="submit" data-next="{url('install/account')}" data-error="{lang('Database information error')}"><i class="bi bi-arrow-right"></i></button>
+                    <div class="text-secondary d-none" id="wait">
+                        <small>{lang('Please wait. . .')}</small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{include footer}

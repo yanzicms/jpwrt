@@ -1,0 +1,7 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white">
+        {each $item in $breadcrumb}
+        <li class="breadcrumb-item{if($item.active)} active{endif}">{if($item.active)}{$item.icon} {$item.name}{else}<a class="text-success" href="{$item.url}">{$item.icon} {$item.name}</a>{endif}</li>
+        {endeach}
+    </ol>
+</nav>

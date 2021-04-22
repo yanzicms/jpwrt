@@ -1,0 +1,58 @@
+{include header}
+<div class="container">
+    <div class="row justify-content-center vh-100">
+        <div class="align-self-center">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center font-weight-bold mb-3">{lang('User login')}</div>
+                    <form>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                            </div>
+                            <input type="text" name="username" class="form-control" placeholder="{lang('Username')}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                            </div>
+                            <input type="password" name="password" class="form-control" placeholder="{lang('Password')}">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="bi bi-check-square-fill"></i></span>
+                            </div>
+                            <input type="text" name="captcha" class="form-control" placeholder="{lang('Captcha')}">
+                            <div>{$captcha}</div>
+                        </div>
+                        <div class="form-group form-check text-secondary">
+                            <input type="checkbox" class="form-check-input" name="rememberme" id="rememberme">
+                            <label class="form-check-label" for="rememberme">{lang('Remember me?')}</label>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" id="submit" class="btn btn-outline-secondary" data-next="{url('admin')}" data-error="{lang('Error')}" data-ok="{lang('Has succeeded')}" data-content="{lang('You have successfully logged in and are redirecting')}">
+                                {lang('Log in')}
+                                <div class="spinner-border spinner-border-sm text-info d-none" id="submitloading">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="container mt-3">
+                        <div class="row text-center">
+                            <div class="col-sm">
+                                <small><a class="text-secondary" href="{url('/')}">{lang('Back to homepage')}</a></small>
+                            </div>
+                            {if($membership == 1)}
+                            <div class="col-sm">
+                                <small><a class="text-secondary" href="{url('register')}">{lang('No account')}</a></small>
+                            </div>
+                            {endif}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include footer}

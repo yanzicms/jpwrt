@@ -1,0 +1,44 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('All tags')}</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewtag')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('Add new tag')}</a>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Name ')}</th>
+            <th scope="col">{lang('Slug')}</th>
+            <th scope="col">{lang('Associated template')}</th>
+            <th scope="col">{lang('Description')}</th>
+            <th scope="col">{lang('Count')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $tags.data}
+        <tr>
+            <th scope="row">{$order}</th>
+            <td>{$item.name}</td>
+            <td>{$item.slug}</td>
+            <td>{$item.template}</td>
+            <td>{$item.description}</td>
+            <td>{$item.quantity}</td>
+            <td>
+                <a href="{url('admin/edittag', ['id' => $item.id])}" class="mx-1 text-info">{lang('Edit')}</a>
+                <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.name}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div>{$tags.paging}</div>
+<script src="{$webroot}public/static/js/alltags.js"></script>
+{include footer}

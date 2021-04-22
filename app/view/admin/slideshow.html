@@ -1,0 +1,73 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('Slideshow')}</div>
+<div class="float-left ml-3">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewslide')}" role="button" data-toggle="modal" data-target="#contentmodal" data-name="{lang('Add new slide')}" data-url="addnewslide"><i class="bi bi-plus mr-1"></i>{lang('Add new slide')}</a>
+</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/slidegroup')}" role="button"><i class="bi bi-collection mr-1"></i>{lang('Slide group')}</a>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col"><a href="{url('admin/slideshow')}" class="text-info">{lang('Order')}</a><i class="bi bi-question-octagon ml-1" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="{lang('The smallest number is at the front.')}"></i></th>
+            <th scope="col">{lang('Name ')}</th>
+            <th scope="col">{lang('Image')}</th>
+            <th scope="col">{lang('URL')}</th>
+            <th scope="col">{lang('Description')}</th>
+            <th scope="col">{lang('Slide group')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $slide}
+        <tr>
+            <th scope="row" class="align-middle">{$order}</th>
+            <td class="align-middle">
+                <div class="form-group my-auto">
+                    <input type="text" class="form-control orderclass" value="{$item.sort}" data-id="{$item.id}" style="width: 4rem">
+                </div>
+            </td>
+            <td class="align-middle">{$item.name}</td>
+            <td class="align-middle"><img src="{$webroot}{$item.image}" height="50"></td>
+            <td class="align-middle">{$item.url}</td>
+            <td class="align-middle">{$item.description}</td>
+            <td class="align-middle">{$item.groupname}</td>
+            <td class="align-middle">
+                <a href="#!" class="mx-1 text-info" data-toggle="modal" data-target="#contentmodal" data-name="{lang('Edit')}" data-url="editslide" data-id="{$item.id}">{lang('Edit')}</a>
+                <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.name}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="contentmodal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contentname"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-none" id="contentdiv"></div>
+                <div class="spinner-border spinner-border-sm text-info" id="contentload">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{lang('Close')}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{$webroot}public/static/js/slideshow.js"></script>
+{include footer}

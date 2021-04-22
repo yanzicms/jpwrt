@@ -1,0 +1,48 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('All users')}</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewuser')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('Add new user')}</a>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Username')}</th>
+            <th scope="col">{lang('Name ')}</th>
+            <th scope="col">{lang('Email')}</th>
+            <th scope="col">{lang('Recently logged in')}</th>
+            <th scope="col">{lang('Role')}</th>
+            <th scope="col">{lang('Posts')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $users.data}
+        <tr>
+            <th scope="row" class="align-middle">{$order}</th>
+            <td class="align-middle">{$item.username}</td>
+            <td class="align-middle">{$item.nickname}</td>
+            <td class="align-middle">{$item.email}</td>
+            <td class="align-middle">
+                {$item.lastime|dateFormat($language)}
+            </td>
+            <td class="align-middle">{$item.usertype}</td>
+            <td class="align-middle">{$item.posts}</td>
+            <td class="align-middle">
+                <a href="{url('admin/edituser', ['id' => $item.id])}" class="mx-1 text-info">{lang('Edit')}</a>
+                <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.username}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div>{$users.paging}</div>
+<script src="{$webroot}public/static/js/allusers.js"></script>
+{include footer}

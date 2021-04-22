@@ -1,0 +1,154 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('Add new post')}</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/allposts')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('All posts')}</a>
+</div>
+<div class="clearfix"></div>
+<div class="mb-3 text-secondary"><small>{lang('Items marked with ')}<i class="bi bi-asterisk"></i>{lang(' are required')}</small></div>
+<div>
+    <form>
+        <div class="form-group">
+            <label for="title">{lang('Title')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <input type="text" class="form-control" id="title" name="title" maxlength="100" placeholder="{lang('Add title')}">
+        </div>
+        {if($author)}
+        <div class="form-group">
+            <label for="slug">{lang('Slug')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <input type="text" class="form-control" id="slug" name="slug" maxlength="100">
+            <small class="form-text text-muted">{lang('The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.')}</small>
+        </div>
+        {endif}
+        <div class="form-group">
+            <label for="editor">{lang('Content')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <textarea class="form-control" id="editor" name="content" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="summary">{lang('Summary')}</label>
+            <textarea class="form-control" id="summary" name="summary" rows="3"></textarea>
+            <small class="form-text text-muted">{lang('The summary is a paragraph of text that summarizes the content. If it is not filled in, it will be generated based on the content.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="category">{lang('Category')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <select class="custom-select" id="category" name="category">
+                <option value="">{lang('Please select a category')}</option>
+                {each $item in $categories}
+                <option value="{$item.id}">{$item.level}{$item.name}</option>
+                {endeach}
+            </select>
+        </div>
+        {if($editor)}
+        <div class="form-group">
+            <label for="template">{lang('Associated template')}</label>
+            <select class="custom-select" id="template" name="template">
+                <option value="">{lang('None')}</option>
+                {each $item in $templates}
+                <option value="{$item.name}">{$item.name}{$item.description}</option>
+                {endeach}
+            </select>
+            <small class="form-text text-muted">{lang('You can associate template files in the posts directory of the current theme.')} {lang('There are no associated templates in some themes.')}</small>
+        </div>
+        <div class="form-group mb-3">
+            <label for="tags">{lang('Tags')}</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="addtag" name="addtag">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="addtagbtn">{lang('Add tag')}</button>
+                </div>
+            </div>
+            <small class="form-text text-muted">{lang('Separate tags with commas.')}</small>
+            <input type="hidden" class="form-control" id="tags" name="tags">
+            <div id="tagsdiv"></div>
+            <div class="clearfix"></div>
+        </div>
+        {endif}
+        <div class="form-group">
+            <label>{lang('Publish')}</label>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <div class="mb-2">{lang('Status')}</div>
+                            <select class="custom-select" id="status" name="status">
+                                <option value="0">{lang('Draft')}</option>
+                                <option value="1">{if($editor)}{lang('Publish')}{else}{lang('Pending review')}{endif}</option>
+                            </select>
+                            {if($editor)}
+                            <div>
+                                <div class="my-2">{lang('Publish time')}</div>
+                                <div class="row no-gutters">
+                                    <div class="col-7">
+                                        <input type="date" class="form-control" id="date" name="date">
+                                    </div>
+                                    <div class="col-5">
+                                        <input type="time" class="form-control" id="time" name="time">
+                                    </div>
+                                </div>
+                            </div>
+                            {endif}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="mb-2">{lang('Visibility')}</div>
+                            <select class="custom-select" id="visibility" name="visibility">
+                                <option value="0">{lang('Public')}</option>
+                                <option value="1">{lang('Password protected')}</option>
+                                <option value="2">{lang('Private')}</option>
+                            </select>
+                            <div id="passwordiv" class="d-none">
+                                <div class="my-2">{lang('Password')}</div>
+                                <input type="password" class="form-control" id="password" name="password">
+                            </div>
+                            {if($editor)}
+                            <div id="stickdiv">
+                                <div class="custom-control custom-checkbox mt-4">
+                                    <input type="checkbox" class="custom-control-input" id="stick" name="stick">
+                                    <label class="custom-control-label" for="stick">{lang('Stick this post to the front page')}</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input type="checkbox" class="custom-control-input" id="recommend" name="recommend">
+                                    <label class="custom-control-label" for="recommend">{lang('Recommend this post to readers')}</label>
+                                </div>
+                            </div>
+                            {endif}
+                        </div>
+                        {if($author)}
+                        <div class="col-12 col-md-4">
+                            <div class="mb-2">{lang('Featured image')}</div>
+                            <div>
+                                <div id="imguptxt" class="row justify-content-center" style="height: 115px">
+                                    <div class="align-self-center">
+                                        <a class="text-info" id="uploadimg" href="#">
+                                            {lang('Set featured image')}
+                                            <div class="spinner-border spinner-border-sm text-info d-none">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="imgdiv" class="d-none">
+                                    <img src="" style="height: 115px" class="img-fluid">
+                                    <a id="delimg" href="#!" class="text-info ml-2" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}"><i class="bi bi-trash mr-1"></i>
+                                        {lang('Delete')}
+                                        <div class="spinner-border spinner-border-sm text-info d-none">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {endif}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="submitpost" class="btn btn-outline-info reload">
+            {lang('Save')}
+            <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </button>
+    </form>
+</div>
+<script src="{$webroot}public/static/HandyEditor/HandyEditor.min.js"></script>
+<script src="{$webroot}public/static/js/uploadfile.js"></script>
+<script src="{$webroot}public/static/js/addnewpost.js"></script>
+{include footer}

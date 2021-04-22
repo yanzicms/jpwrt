@@ -1,0 +1,44 @@
+{include header}
+{include breadcrumb}
+<div class="container my-3">
+    <div class="row">
+        <div class="col-12 col-lg-9">
+            <div class="card border-0">
+                <div class="card-body">
+                    {$pageTop}
+                    <div class="text-center h4">{$page.title}</div>
+                    <div class="text-center text-secondary border-bottom pb-2 mb-3">
+                        <small>
+                            <span>{lang('Publish time')}: {$page.createtime|dateFormat($language)}</span>
+                            <span>{lang('Views')}: {$page.views}</span>
+                        </small>
+                    </div>
+                    <div class="mb-3" id="content">
+                        {if($page.secret)}
+                        <form>
+                            <div class="form-group">
+                                <label for="password">{lang('A password is required to access, please enter the password')}</label>
+                                <input type="password" class="form-control" id="password" name="password">
+                            </div>
+                            <input type="hidden" name="id" value="{$page.id}">
+                            <button type="button" id="submitpassword" class="btn btn-outline-success">{lang('Submit')}</button>
+                        </form>
+                        {else}
+                        <img class="img-fluid" src="{$page.thumbnail}">
+                        {$page.content}
+                        {endif}
+                    </div>
+                    {$pageBottom}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-3">{include side}</div>
+    </div>
+</div>
+<div class="d-none">
+    <div id="error">{lang('Error')}</div>
+    <div id="url_password">{url('index/pagepassword')}</div>
+</div>
+<script src="{$webroot}public/static/js/jqboac.js"></script>
+<script src="{$webroot}public/themes/{$template}/js/page.js"></script>
+{include footer}

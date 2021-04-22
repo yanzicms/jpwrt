@@ -1,0 +1,54 @@
+<form>
+    <div class="form-group">
+        <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="name" name="name" value="{$links.name}" maxlength="100">
+    </div>
+    <div class="form-group">
+        <label for="url">{lang('URL')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="url" name="url" value="{$links.url}" maxlength="300">
+    </div>
+    <div class="form-group">
+        <label>{lang('Image')}</label>
+        <div id="uploadimgdiv">
+            <button type="button" id="uploadimg" class="btn btn-outline-info btn-sm px-4 rounded-pill">
+                {lang('Choose a image')}
+                <div class="spinner-border spinner-border-sm text-info d-none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </button>
+        </div>
+        <div class="mt-2 d-none" id="imgdiv"><img src="{if($links.image != '')}{$webroot}{$links.image}{endif}" class="img-fluid"></div>
+        <div class="mt-2 d-none" id="delimgdiv">
+            <a id="delimg" href="#!" class="text-info ml-2" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}"><i class="bi bi-trash mr-1"></i>
+                {lang('Delete')}
+                <div class="spinner-border spinner-border-sm text-info d-none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="home">{lang('Link location')}</label>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="home" name="home"{if($links.home == 1)} checked="checked"{endif}>
+            <label class="custom-control-label" for="home">{lang('Show only on the homepage')}</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">{lang('Description')}</label>
+        <textarea class="form-control" id="description" name="description" rows="3">{$links.description}</textarea>
+    </div>
+    <input type="hidden" name="id" id="id" value="{$links.id}">
+    <button type="button" id="editlinksubmit" class="btn btn-outline-info mb-3" data-content="{lang('Link modified successfully!')}">
+        {lang('Save')}
+        <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+</form>
+<div class="d-none">
+    <div id="editlink_uploadimgedit">{url('admin/uploadimgeditlink')}</div>
+    <div id="editlink_deleteimgedit">{url('admin/deleteimgeditlink')}</div>
+</div>
+<script src="{$webroot}public/static/js/uploadfile.js"></script>
+<script src="{$webroot}public/static/js/editlink.js"></script>

@@ -1,0 +1,77 @@
+{include header}
+<div class="mb-3 h4">{lang('General settings')}</div>
+<div>
+    <form>
+        <div class="form-group">
+            <label for="admin-email">{lang('Administration Email Address')}</label>
+            <input type="text" class="form-control" id="admin-email" name="admin-email" value="{$general.admin-email.email}">
+            <small class="form-text text-muted">{lang('This address is used for admin purposes. If you change this, we will send you an email at your new address to confirm it.')} {lang('The new address will not become active until confirmed.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="rewrite">{lang('Pseudo-static')}</label>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="rewrite" name="rewrite"{if($rewrite)} checked{endif}>
+                <label class="custom-control-label" for="rewrite">{lang('Use pseudo-static')}</label>
+            </div>
+            <small class="form-text text-muted">{lang('Using pseudo-static can make the URL look better, but it requires the server to enable the rewrite module.')}</small>
+        </div>
+        <div class="form-group">
+            <label for="membership">{lang('Membership')}</label>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="membership" name="membership"{if($general.membership == 1)} checked{endif}>
+                <label class="custom-control-label" for="membership">{lang('Anyone can register')}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="role">{lang('New User Default Role')}</label>
+            <select class="custom-select" id="role" name="role">
+                <option value="subscriber"{if($general.role == 'subscriber')} selected{endif}>{lang('Subscriber')}</option>
+                <option value="contributor"{if($general.role == 'contributor')} selected{endif}>{lang('Contributor')}</option>
+                <option value="author"{if($general.role == 'author')} selected{endif}>{lang('Author')}</option>
+                <option value="editor"{if($general.role == 'editor')} selected{endif}>{lang('Editor')}</option>
+                <option value="administrator"{if($general.role == 'administrator')} selected{endif}>{lang('Administrator')}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>{lang('Site logo')}</label>
+            <div id="uploadimgdiv">
+                <button type="button" id="uploadimg" class="btn btn-outline-info btn-sm px-4 rounded-pill">
+                    {lang('Choose a image')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </button>
+            </div>
+            <div class="mt-2 d-none" id="imgdiv"><img src="{if($general.logo != '')}{$webroot}{$general.logo}{endif}" class="img-fluid"></div>
+            <div class="mt-2 d-none" id="delimgdiv">
+                <a id="delimg" href="#!" class="text-info ml-2" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}"><i class="bi bi-trash mr-1"></i>
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {if($language == 'zh-cn')}
+        <div class="form-group">
+            <label for="filing">{lang('Site filing')}</label>
+            <textarea class="form-control" id="filing" name="filing" rows="2">{$general.filing}</textarea>
+            <small class="form-text text-muted">{lang('Website filing is generally used for Chinese sites, and there are no filing requirements for non-Chinese sites.')} {lang('It may only be displayed in some Chinese themes.')}</small>
+        </div>
+        {endif}
+        <div class="form-group">
+            <label for="customcode">{lang('Custom code')}</label>
+            <textarea class="form-control" id="customcode" name="customcode" rows="8">{$general.customcode}</textarea>
+            <small class="form-text text-muted">{lang('If you want to add custom code to the website, such as JavaScript, you can add it here, but whether the addition is effective depends on whether the theme supports it.')}</small>
+        </div>
+        <button type="button" id="submit" class="btn btn-outline-info">
+            {lang('Save')}
+            <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </button>
+    </form>
+</div>
+<script src="{$webroot}public/static/js/uploadfile.js"></script>
+<script src="{$webroot}public/static/js/general.js"></script>
+{include footer}

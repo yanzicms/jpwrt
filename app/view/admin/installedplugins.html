@@ -1,0 +1,48 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('Plugins')}</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Plugin')}</th>
+            <th scope="col">{lang('Author')}</th>
+            <th scope="col">{lang('Version')}</th>
+            <th scope="col">{lang('Description')}</th>
+            <th scope="col">{lang('Status')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $plugins}
+        <tr>
+            <th scope="row">{$order}</th>
+            <td>{$item.pluginName}</td>
+            <td>{$item.author}</td>
+            <td>{$item.version}</td>
+            <td>{$item.description}</td>
+            <td>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input putonplugin" id="plugin_{$item.jpwrtplugin}" data-id="{$item.jpwrtplugin}"{if($item.active == true)} checked="checked"{endif}>
+                    <label class="custom-control-label{if($item.active == true)} text-primary{else} text-secondary{endif}" for="plugin_{$item.jpwrtplugin}"><small>{if($item.active == true)}{lang('Activate')}{else}{lang('Deactivate')}{endif}</small></label>
+                </div>
+            </td>
+            <td>
+                <a href="#!" class="mx-1 text-info delete" data-id="{$item.jpwrtplugin}" data-name="{$item.pluginName}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div class="d-none">
+    <div id="putonplugin">{lang('Activate')}</div>
+    <div id="notputonplugin">{lang('Deactivate')}</div>
+</div>
+<script src="{$webroot}public/static/js/installedplugins.js"></script>
+{include footer}

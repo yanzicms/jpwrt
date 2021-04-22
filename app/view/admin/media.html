@@ -1,0 +1,87 @@
+{include header}
+<div class="mb-3 h4">{lang('Media settings')}</div>
+<div class="mb-3 text-secondary">
+    {lang('The sizes listed below determine the maximum dimensions in pixels to use when adding an image to the Media Library.')}
+</div>
+<div>
+    <form>
+        <div class="h5 mb-3 font-weight-bold">
+            {lang('Image sizes')}
+        </div>
+        <div>
+            <div class="h6 mb-3">
+                {lang('Thumbnail size')}
+            </div>
+            <div class="form-group row">
+                <label for="thumbnail-width" class="col-sm-2 col-form-label">{lang('Width')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="thumbnail-width" name="thumbnail-width" value="{$media.thumbnail-width}" min="1">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="thumbnail-height" class="col-sm-2 col-form-label">{lang('Height')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="thumbnail-height" name="thumbnail-height" value="{$media.thumbnail-height}" min="1">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="h6 mb-3">
+                {lang('Medium size')}
+            </div>
+            <div class="form-group row">
+                <label for="medium-width" class="col-sm-2 col-form-label">{lang('Width')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="medium-width" name="medium-width" value="{$media.medium-width}" min="1">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="medium-height" class="col-sm-2 col-form-label">{lang('Height')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="medium-height" name="medium-height" value="{$media.medium-height}" min="1">
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="h6 mb-3">
+                {lang('Large size')}
+            </div>
+            <div class="form-group row">
+                <label for="large-width" class="col-sm-2 col-form-label">{lang('Max width')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="large-width" name="large-width" value="{$media.large-width}" min="1">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="large-height" class="col-sm-2 col-form-label">{lang('Max height')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="large-height" name="large-height" value="{$media.large-height}" min="1">
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <div class="h5 mb-3 font-weight-bold">
+                {lang('Default slide group')}
+            </div>
+            <div class="form-group row">
+                <label for="slide-width" class="col-sm-2 col-form-label">{lang('Width')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="slide-width" name="slide-width" value="{$media.slide-width}" min="1">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="slide-height" class="col-sm-2 col-form-label">{lang('Height')}</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control" id="slide-height" name="slide-height" value="{$media.slide-height}" min="1">
+                </div>
+            </div>
+        </div>
+        <button type="button" id="submit" class="btn btn-outline-info">
+            {lang('Save')}
+            <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </button>
+    </form>
+</div>
+{include footer}

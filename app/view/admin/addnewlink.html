@@ -1,0 +1,49 @@
+<form>
+    <div class="form-group">
+        <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="name" name="name" maxlength="100">
+    </div>
+    <div class="form-group">
+        <label for="url">{lang('URL')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="url" name="url" maxlength="300">
+    </div>
+    <div class="form-group">
+        <label>{lang('Image')}</label>
+        <div id="uploadimgdiv">
+            <button type="button" id="uploadimg" class="btn btn-outline-info btn-sm px-4 rounded-pill">
+                {lang('Choose a image')}
+                <div class="spinner-border spinner-border-sm text-info d-none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </button>
+        </div>
+        <div class="mt-2 d-none" id="imgdiv"><img src="" class="img-fluid"></div>
+        <div class="mt-2 d-none" id="delimgdiv">
+            <a id="delimg" href="#!" class="text-info ml-2" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}"><i class="bi bi-trash mr-1"></i>
+                {lang('Delete')}
+                <div class="spinner-border spinner-border-sm text-info d-none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="home">{lang('Link location')}</label>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="home" name="home">
+            <label class="custom-control-label" for="home">{lang('Show only on the homepage')}</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">{lang('Description')}</label>
+        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+    </div>
+    <button type="button" id="addnewlinksubmit" class="btn btn-outline-info mb-3" data-content="{lang('Link added successfully!')}">
+        {lang('Save')}
+        <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+</form>
+<script src="{$webroot}public/static/js/uploadfile.js"></script>
+<script src="{$webroot}public/static/js/addnewlink.js"></script>

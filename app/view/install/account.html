@@ -1,0 +1,31 @@
+{include header}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div>
+            {include institle}
+            <form class="mt-5" id="account">
+                <div class="form-group mysql">
+                    <label for="username">{lang('Administrator account')}</label>
+                    <input type="text" class="form-control" id="username" name="username">
+                    <small class="form-text text-muted">{lang('Username starts with a letter and can only contain letters, numbers and underscores')}</small>
+                </div>
+                <div class="form-group mysql">
+                    <label for="password">{lang('Password')}</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                    <small class="form-text text-muted">{lang('Password length must be no less than 8 characters')}</small>
+                </div>
+                <div class="form-group mysql">
+                    <label for="email">{lang('E-mail')}</label>
+                    <input type="text" class="form-control" id="email" name="email">
+                </div>
+                <div class="text-center mb-5">
+                    <button type="button" class="btn btn-outline-success rounded-circle" id="submit" data-next="{url('install/finish')}"><i class="bi bi-arrow-right"></i></button>
+                    <div class="text-secondary d-none" id="wait">
+                        <small>{lang('Please wait. . .')}</small>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{include footer}

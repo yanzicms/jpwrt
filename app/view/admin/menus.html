@@ -1,0 +1,150 @@
+{include header}
+<div class="mb-3 h4">{lang('Menus')}</div>
+<div class="mb-3 text-secondary"><small>{lang('Items marked with ')}<i class="bi bi-asterisk"></i>{lang(' are required')}</small></div>
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="font-weight-bold mb-2">{lang('Primary menu')}</div>
+                <div class="mb-3"><small class="text-secondary">{lang('Usually, each theme will have a primary menu.')}</small></div>
+                <form>
+                    <div class="form-group">
+                        <label for="menunamep">{lang('Menu name')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+                        <input type="text" class="form-control" id="menunamep" name="menuname" value="{$menu.primary.name}">
+                    </div>
+                    <div class="form-group">
+                        <label for="slugp">{lang('Slug')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+                        <input type="text" class="form-control" id="slugp" name="slug" value="{$menu.primary.slug}">
+                        <small class="form-text text-muted">{lang('The slug can only contain letters, numbers and hyphens.')}</small>
+                    </div>
+                    <div class="clearfix pb-2 mb-2 border-bottom">
+                        <button type="button" class="btn btn-outline-info btn-sm float-right" id="primarymenu">
+                            {lang('Save')}
+                            <div class="spinner-border spinner-border-sm text-secondary d-none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label>{lang('You can complete the menu settings through the following operations.')}</label>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" id="primarycategories" data-title="{lang('Are you sure?')}" data-alert="{lang('Are you sure you want to use categories to generate the menu? Use categories to generate the menu, it will completely cover the menu that has been set!')}" data-content="{lang('The menu has been generated!')}">
+                                <i class="bi bi-layout-wtf mr-1"></i>{lang('Use categories to generate menus')}
+                                <div class="spinner-border spinner-border-sm text-secondary d-none">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" id="primarypages" data-title="{lang('Are you sure?')}" data-alert="{lang('Are you sure you want to use pages to generate the menu? Use pages to generate the menu, it will completely cover the menu that has been set!')}" data-content="{lang('The menu has been generated!')}">
+                                <i class="bi bi-journals mr-1"></i>{lang('Use page to generate menu')}
+                            </a>
+                        </div>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" data-toggle="modal" data-target="#addmenu" data-name="{lang('Primary menu')}" data-menutype="primary"><i class="bi bi-clipboard-plus mr-1"></i>{lang('Add menu item')}</a>
+                        </div>
+                        <div>
+                            <a href="#!" class="text-info mr-2" data-toggle="modal" data-target="#showmenu" data-name="{lang('Primary menu')}" data-menutype="primary"><i class="bi bi-eye mr-1"></i>{lang('View menu')}</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="font-weight-bold mb-2">{lang('Secondary menu')}</div>
+                <div class="mb-3"><small class="text-secondary">{lang('The secondary menu is not prominent by default; however, some themes may show it.')}</small></div>
+                <form>
+                    <div class="form-group">
+                        <label for="menunames">{lang('Menu name')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+                        <input type="text" class="form-control" id="menunames" name="menuname" value="{$menu.secondary.name}">
+                    </div>
+                    <div class="form-group">
+                        <label for="slugs">{lang('Slug')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+                        <input type="text" class="form-control" id="slugs" name="slug" value="{$menu.secondary.slug}">
+                        <small class="form-text text-muted">{lang('The slug can only contain letters, numbers and hyphens.')}</small>
+                    </div>
+                    <div class="clearfix pb-2 mb-2 border-bottom">
+                        <button type="button" class="btn btn-outline-info btn-sm float-right" id="secondarymenu">
+                            {lang('Save')}
+                            <div class="spinner-border spinner-border-sm text-secondary d-none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label>{lang('You can complete the menu settings through the following operations.')}</label>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" id="secondarycategories" data-title="{lang('Are you sure?')}" data-alert="{lang('Are you sure you want to use categories to generate the menu? Use categories to generate the menu, it will completely cover the menu that has been set!')}" data-content="{lang('The menu has been generated!')}">
+                                <i class="bi bi-layout-wtf mr-1"></i>{lang('Use categories to generate menus')}
+                                <div class="spinner-border spinner-border-sm text-secondary d-none">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" id="secondarypages" data-title="{lang('Are you sure?')}" data-alert="{lang('Are you sure you want to use pages to generate the menu? Use pages to generate the menu, it will completely cover the menu that has been set!')}" data-content="{lang('The menu has been generated!')}">
+                                <i class="bi bi-journals mr-1"></i>{lang('Use page to generate menu')}
+                                <div class="spinner-border spinner-border-sm text-secondary d-none">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" data-toggle="modal" data-target="#addmenu" data-name="{lang('Secondary menu')}" data-menutype="secondary"><i class="bi bi-clipboard-plus mr-1"></i>{lang('Add menu item')}</a>
+                        </div>
+                        <div class="mb-2">
+                            <a href="#!" class="text-info mr-2" data-toggle="modal" data-target="#showmenu" data-name="{lang('Secondary menu')}" data-menutype="secondary"><i class="bi bi-eye mr-1"></i>{lang('View menu')}</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addmenu" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addmenuname"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-none" id="addmenudiv"></div>
+                <div class="spinner-border spinner-border-sm text-info" id="addmenuload">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{lang('Close')}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="showmenu" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="showmenuname"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-none" id="showmenudiv"></div>
+                <div class="spinner-border spinner-border-sm text-info" id="showmenuload">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{lang('Close')}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{$webroot}public/static/js/menus.js"></script>
+{include footer}

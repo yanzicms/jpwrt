@@ -1,0 +1,190 @@
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'dashboard')} jsnpp_active bg-danger{endif}" href="{url('admin')}"><i class="bi bi-speedometer2 mr-2"></i>{lang('Dashboard')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'dashboard')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'dashboard' && $current == 'home')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin')}"><span class="ml-3">{lang('Home')}</span></a>
+        
+        {notempty $plugin.dashboard}
+        {each $item in $plugin.dashboard}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'dashboard' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'dashboard', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{if($contributor)}
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'posts')} jsnpp_active bg-danger{endif}" href="{url('admin/allposts')}"><i class="bi bi-file-earmark-text mr-2"></i>{lang('Posts')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'posts')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'posts' && $current == 'allposts')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/allposts')}"><span class="ml-3">{lang('All posts')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'posts' && $current == 'addnewpost')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/addnewpost')}"><span class="ml-3">{lang('Add new post')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'posts' && $current == 'recyclebin')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/recyclebin')}"><span class="ml-3">{lang('Recycle bin')}</span></a>
+        {notempty $plugin.posts}
+        {each $item in $plugin.posts}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'posts' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'posts', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{endif}
+{if($editor)}
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'categories')} jsnpp_active bg-danger{endif}" href="{url('admin/allcategories')}"><i class="bi bi-layout-wtf mr-2"></i>{lang('Categories')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'categories')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'categories' && $current == 'allcategories')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/allcategories')}"><span class="ml-3">{lang('All categories')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'categories' && $current == 'addnewcategory')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/addnewcategory')}"><span class="ml-3">{lang('Add new category')}</span></a>
+        {notempty $plugin.categories}
+        {each $item in $plugin.categories}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'categories' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'categories', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'tags')} jsnpp_active bg-danger{endif}" href="{url('admin/alltags')}"><i class="bi bi-tags mr-2"></i>{lang('Tags')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'tags')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'tags' && $current == 'alltags')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/alltags')}"><span class="ml-3">{lang('All tags')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'tags' && $current == 'addnewtag')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/addnewtag')}"><span class="ml-3">{lang('Add new tag')}</span></a>
+        {notempty $plugin.tags}
+        {each $item in $plugin.tags}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'tags' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'tags', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'pages')} jsnpp_active bg-danger{endif}" href="{url('admin/allpages')}"><i class="bi bi-journals mr-2"></i>{lang('Pages')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'pages')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'pages' && $current == 'allpages')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/allpages')}"><span class="ml-3">{lang('All pages')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'pages' && $current == 'addnewpage')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/addnewpage')}"><span class="ml-3">{lang('Add new page')}</span></a>
+        {notempty $plugin.pages}
+        {each $item in $plugin.pages}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'pages' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'pages', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'comments')} jsnpp_active bg-danger{endif}" href="{url('admin/comments')}"><i class="bi bi-chat-left-text mr-2"></i>{lang('Comments')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'comments')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'comments' && $current == 'comments')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/comments')}"><span class="ml-3">{lang('All comments')}</span></a>
+        {notempty $plugin.comments}
+        {each $item in $plugin.comments}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'comments' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'comments', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{endif}
+{if($administrator)}
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'appearance')} jsnpp_active bg-danger{endif}" href="{url('admin/themes')}"><i class="bi bi-building mr-2"></i>{lang('Appearance')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'appearance')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'themes')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/themes')}"><span class="ml-3">{lang('Themes')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'menus')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/menus')}"><span class="ml-3">{lang('Menus')}</span></a>
+        
+        <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'slideshow')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/slideshow')}"><span class="ml-3">{lang('Slideshow')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'links')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/links')}"><span class="ml-3">{lang('Links')}</span></a>
+        {notempty $plugin.appearance}
+        {each $item in $plugin.appearance}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'appearance' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'appearance', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'plugins')} jsnpp_active bg-danger{endif}" href="{url('admin/installedplugins')}"><i class="bi bi-plug mr-2"></i>{lang('Plugins')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'plugins')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'plugins' && $current == 'installedplugins')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/installedplugins')}"><span class="ml-3">{lang('Installed plugins')}</span></a>
+        
+        {notempty $plugin.plugins}
+        {each $item in $plugin.plugins}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'plugins' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'plugins', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{endif}
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'users')} jsnpp_active bg-danger{endif}" href="{url('admin/allusers')}"><i class="bi bi-person mr-2"></i>{lang('Users')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'users')} jsnpp_submenu{endif}">
+        {if($administrator)}
+        <a class="nav-link rounded-0{if($group == 'users' && $current == 'allusers')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/allusers')}"><span class="ml-3">{lang('All users')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'users' && $current == 'addnewuser')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/addnewuser')}"><span class="ml-3">{lang('Add new user')}</span></a>
+        {endif}
+        <a class="nav-link rounded-0{if($group == 'users' && $current == 'profile')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/profile')}"><span class="ml-3">{lang('Profile')}</span></a>
+        {notempty $plugin.users}
+        {each $item in $plugin.users}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'users' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'users', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{if($administrator)}
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'tools')} jsnpp_active bg-danger{endif}" href="{url('admin/clearcache')}"><i class="bi bi-tools mr-2"></i>{lang('Tools')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'tools')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'tools' && $current == 'clearcache')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/clearcache')}"><span class="ml-3">{lang('Clear cache')}</span></a>
+        
+        {notempty $plugin.tools}
+        {each $item in $plugin.tools}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'tools' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'tools', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'settings')} jsnpp_active bg-danger{endif}" href="{url('admin/visit')}"><i class="bi bi-nut mr-2"></i>{lang('Settings')}</a>
+    <nav class="nav nav-pills flex-column{if($group != 'settings')} jsnpp_submenu{endif}">
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == 'visit')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/visit')}"><span class="ml-3">{lang('Visit')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == 'general')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/general')}"><span class="ml-3">{lang('General')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == 'reading')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/reading')}"><span class="ml-3">{lang('Reading')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == 'discussion')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/discussion')}"><span class="ml-3">{lang('Discussion')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == 'media')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/media')}"><span class="ml-3">{lang('Media')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == 'permalinks')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/permalinks')}"><span class="ml-3">{lang('Permalinks')}</span></a>
+        {notempty $plugin.settings}
+        {each $item in $plugin.settings}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == 'settings' && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => 'settings', '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{endif}
+{notempty $groups}
+{each $gitem in $groups}
+{if($gitem.info.allow)}
+<nav class="navbar-dark px-0 dropright">
+    <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == $gitem.group)} jsnpp_active bg-danger{endif}" href="{url('admin/attach', ['_group' => $gitem.group, '_current' => $gitem.info.default, '_plugin' => $gitem.info.plugin, '_post' => $gitem.info.post])}">{empty $gitem.info.icon}<i class="bi bi-journal-plus"></i>{else}{$gitem.info.icon}{endempty}<span class="ml-2">{$gitem.info.name}</span></a>
+    <nav class="nav nav-pills flex-column{if($group != $gitem.group)} jsnpp_submenu{endif}">
+        {notempty $gitem.plugin}
+        {each $item in $gitem.plugin}
+        {if($item.show)}
+        <a class="nav-link rounded-0{if($group == $gitem.group && $current == $item.current)} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/attach', ['_group' => $gitem.group, '_current' => $item.current, '_plugin' => $item.plugin, '_theme' => $item.theme, '_post' => $item.post])}"><span class="ml-3">{$item.description}</span></a>
+        {endif}
+        {endeach}
+        {endnotempty}
+    </nav>
+</nav>
+{endif}
+{endeach}
+{endnotempty}

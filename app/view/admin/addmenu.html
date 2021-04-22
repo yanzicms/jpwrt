@@ -1,0 +1,52 @@
+<form>
+    <div class="form-group">
+        <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="name" name="name" maxlength="100">
+        <small class="form-text text-muted">{lang('The name is how it appears on your site.')}</small>
+    </div>
+    <div class="form-group">
+        <label for="menuurl">{lang('Menu URL')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <select class="custom-select" id="menuurl" name="menuurl">
+            <option value="">{lang('Please select or fill in the menu URL')}</option>
+            <option value="home">{lang('Home')}</option>
+            <option value="custom">{lang('Custom URL')}</option>
+            <optgroup label="{lang('Categories')}">
+                {each $item in $categories}
+                <option value="category.{$item.id}.{$item.slug}">{$item.level}{$item.name}</option>
+                {endeach}
+            </optgroup>
+            <optgroup label="{lang('Pages')}">
+                {each $item in $pages}
+                <option value="page.{$item.id}.{$item.slug}">{$item.level}{$item.title}</option>
+                {endeach}
+            </optgroup>
+        </select>
+    </div>
+    <div class="form-group d-none" id="customurldiv">
+        <label for="custom">{lang('Custom URL')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+        <input type="text" class="form-control" id="custom" name="custom" maxlength="100">
+        <small class="form-text text-muted">{lang('The custom URL starts with http:// or https://')}</small>
+    </div>
+    <div class="form-group">
+        <label for="parent">{lang('Parent menu')}</label>
+        <select class="custom-select" id="parent" name="parent">
+            <option value="0">{lang('None')}</option>
+            {each $item in $menu}
+            <option value="{$item.id}">{$item.level}{$item.name}</option>
+            {endeach}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="icon">{lang('Icon')}</label>
+        <input type="text" class="form-control" id="icon" name="icon" maxlength="300">
+        <small class="form-text text-muted">{lang('The icon is not prominent by default; however, some themes may show it.')} {lang('Please fill in the HTML code according to the icon used by the theme.')}</small>
+    </div>
+    <input type="hidden" name="slug" value="{$slug}">
+    <button type="button" id="addmenusubmit" class="btn btn-outline-info mb-3" data-content="{lang('The menu is added successfully!')}">
+        {lang('Save')}
+        <div class="spinner-border spinner-border-sm text-secondary d-none" id="submitloading">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+</form>
+<script src="{$webroot}public/static/js/addmenu.js"></script>

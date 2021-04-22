@@ -1,0 +1,111 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('All posts')}</div>
+<div class="float-right">
+    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewpost')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('Add new post')}</a>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Title')}</th>
+            <th scope="col">{lang('Author')}</th>
+            <th scope="col">{lang('Categories')}</th>
+            <th scope="col">{lang('Views')}</th>
+            <th scope="col">{lang('Comments')}</th>
+            <th scope="col">{lang('Date')}</th>
+            {if($editor)}
+            <th scope="col">{lang('Review')}</th>
+            <th scope="col">{lang('Manage')}</th>
+            {endif}
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $posts.data}
+        <tr>
+            <th scope="row" class="align-middle">{($posts.page - 1) * $posts.per + $order}</th>
+            <td class="align-middle">
+                <div>
+                    {if $item.thumbnail != ''}<img src="{$webroot}{$item.thumbnail}" height="35">{endif}
+                    <a class="text-info" href="{url('admin/editpost', ['id' => $item.id])}">{$item.title}</a>
+                    <small>
+                        {if $item.status == 0}<span class="text-secondary"> - {lang('Draft')}</span>{elseif $item.status == 1}<span class="text-secondary"> - {lang('Pending review')}</span>{elseif $item.status == 2}<span class="text-secondary"> - {lang('The review failed')}</span>{endif}
+                    </small>
+                </div>
+                <div class="mt-2">
+                    <small>
+                        <a href="{url('admin/editpost', ['id' => $item.id])}" class="mx-1 text-info"><i class="bi bi-pencil-square mr-1"></i>{lang('Edit')}</a>
+                        <a href="#!" class="mx-1 text-info delete" data-id="{$item.id}" data-name="{$item.title}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                            <i class="bi bi-trash mr-1"></i>{lang('Trash')}
+                            <div class="spinner-border spinner-border-sm text-info d-none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </a>
+                        {if $item.status == 3}
+                        <a href="{url('index/archives', ['id' => $item.id, 'name' => $item.slug, 'category' => $item.catslug, 'author' => $item.username, 'year' => $item.year, 'month' => $item.month, 'day' => $item.day])}" class="mx-1 text-info" target="_blank"><i class="bi bi-eye mr-1"></i>{lang('View')}</a>
+                        {else}
+                        <a href="{url('index/preview', ['id' => $item.id])}" class="mx-1 text-info" target="_blank"><i class="bi bi-eye mr-1"></i>{lang('Preview')}</a>
+                        {endif}
+                    </small>
+                </div>
+            </td>
+            <td class="align-middle">{$item.username}</td>
+            <td class="align-middle">
+                {if($editor)}
+                <a href="{url('admin/editcategory', ['id' => $item.cid])}" class="text-info">{$item.name}</a>
+                {else}
+                {$item.name}
+                {endif}
+            </td>
+            <td class="align-middle">{$item.views}</td>
+            <td class="align-middle">{$item.comment}</td>
+            <td class="align-middle">
+                <div>
+                    <small>
+                        {if $item.status == 3}<span class="text-secondary">{lang('Published')}</span>{else}<span class="text-secondary">{lang('Last Modified')}</span>{endif}
+                    </small>
+                </div>
+                <div>
+                    {$item.createtime|dateFormat($language)}
+                </div>
+            </td>
+            {if($editor)}
+            <td class="align-middle">
+                {if($item.status > 0)}
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input putonreview" id="review_{$item.id}" data-id="{$item.id}"{if($item.status == 3)} checked="checked"{endif}>
+                    <label class="custom-control-label{if($item.status == 3)} text-primary{else} text-secondary{endif}" for="review_{$item.id}"><small>{if($item.status == 3)}{lang('Passed')}{else}{lang('Not pass')}{endif}</small></label>
+                </div>
+                {endif}
+            </td>
+            <td class="align-middle">
+                {if $item.status == 3}
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input putontop" id="top_{$item.id}" data-id="{$item.id}"{if($item.top == 1)} checked="checked"{endif}>
+                    <label class="custom-control-label{if($item.top == 1)} text-primary{else} text-secondary{endif}" for="top_{$item.id}"><small>{if($item.top == 1)}{lang('Put on top')}{else}{lang('Not put on top')}{endif}</small></label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input recommended" id="recommend_{$item.id}" data-id="{$item.id}"{if($item.recommend == 1)} checked="checked"{endif}>
+                    <label class="custom-control-label{if($item.recommend == 1)} text-primary{else} text-secondary{endif}" for="recommend_{$item.id}"><small>{if($item.recommend == 1)}{lang('Recommended')}{else}{lang('Not recommended')}{endif}</small></label>
+                </div>
+                {endif}
+            </td>
+            {endif}
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div>{$posts.paging}</div>
+{if($editor)}
+<div class="d-none">
+    <div id="passed">{lang('Passed')}</div>
+    <div id="notpass">{lang('Not pass')}</div>
+    <div id="putontop">{lang('Put on top')}</div>
+    <div id="notputontop">{lang('Not put on top')}</div>
+    <div id="recommended">{lang('Recommended')}</div>
+    <div id="notrecommended">{lang('Not recommended')}</div>
+</div>
+{endif}
+<script src="{$webroot}public/static/js/allposts.js"></script>
+{include footer}
