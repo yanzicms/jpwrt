@@ -2,7 +2,6 @@
     <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'dashboard')} jsnpp_active bg-danger{endif}" href="{url('admin')}"><i class="bi bi-speedometer2 mr-2"></i>{lang('Dashboard')}</a>
     <nav class="nav nav-pills flex-column{if($group != 'dashboard')} jsnpp_submenu{endif}">
         <a class="nav-link rounded-0{if($group == 'dashboard' && $current == 'home')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin')}"><span class="ml-3">{lang('Home')}</span></a>
-        
         {notempty $plugin.dashboard}
         {each $item in $plugin.dashboard}
         {if($item.show)}
@@ -92,7 +91,6 @@
     <nav class="nav nav-pills flex-column{if($group != 'appearance')} jsnpp_submenu{endif}">
         <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'themes')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/themes')}"><span class="ml-3">{lang('Themes')}</span></a>
         <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'menus')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/menus')}"><span class="ml-3">{lang('Menus')}</span></a>
-        
         <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'slideshow')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/slideshow')}"><span class="ml-3">{lang('Slideshow')}</span></a>
         <a class="nav-link rounded-0{if($group == 'appearance' && $current == 'links')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/links')}"><span class="ml-3">{lang('Links')}</span></a>
         {notempty $plugin.appearance}
@@ -108,7 +106,6 @@
     <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'plugins')} jsnpp_active bg-danger{endif}" href="{url('admin/installedplugins')}"><i class="bi bi-plug mr-2"></i>{lang('Plugins')}</a>
     <nav class="nav nav-pills flex-column{if($group != 'plugins')} jsnpp_submenu{endif}">
         <a class="nav-link rounded-0{if($group == 'plugins' && $current == 'installedplugins')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/installedplugins')}"><span class="ml-3">{lang('Installed plugins')}</span></a>
-        
         {notempty $plugin.plugins}
         {each $item in $plugin.plugins}
         {if($item.show)}
@@ -141,7 +138,6 @@
     <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'tools')} jsnpp_active bg-danger{endif}" href="{url('admin/clearcache')}"><i class="bi bi-tools mr-2"></i>{lang('Tools')}</a>
     <nav class="nav nav-pills flex-column{if($group != 'tools')} jsnpp_submenu{endif}">
         <a class="nav-link rounded-0{if($group == 'tools' && $current == 'clearcache')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/clearcache')}"><span class="ml-3">{lang('Clear cache')}</span></a>
-        
         {notempty $plugin.tools}
         {each $item in $plugin.tools}
         {if($item.show)}

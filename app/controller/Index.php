@@ -14,14 +14,12 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\controller;
-
 use app\general\Filter;
 use app\general\Ladder;
 use jsnpp\Cache;
 use jsnpp\Controller;
 use jsnpp\Pagination;
 use jsnpp\Tools;
-
 class Index extends Controller
 {
     private $cachetime = 1200;
@@ -190,7 +188,6 @@ class Index extends Controller
     }
     protected function commentsFunc(Cache $cache, Pagination $pagination, $param)
     {
-
         if($this->box->has('params.page')){
             $page = $this->box->get('params.page');
         }
@@ -481,6 +478,10 @@ class Index extends Controller
     public function preview($param)
     {
         $this->app->entrance->check('get')->db->table('posts')->field('id,uid,cid,title,slug,keyword,template,source,thumbnail,comment,views,likes,dislikes,createtime,commentsoff,visibility,summary,content')->where('id', $param['id'])->where('uid', $this->session->get('id'))->box('posts')->find()->table('posts')->field('id,uid,cid,title,slug,thumbnail,createtime,summary')->where('id', '<', ':box(posts.id)')->where('visibility', '<', 2)->where('status', 3)->where('trash', 0)->where('createtime', 'BETWEEN', [$this->app->getConfig('creationtime'), $this->totime()])->order('id DESC')->box('nextpost')->find()->table('posts')->field('id,uid,cid,title,slug,thumbnail,createtime,summary')->where('id', '>', ':box(posts.id)')->where('visibility', '<', 2)->where('status', 3)->where('trash', 0)->where('createtime', 'BETWEEN', [$this->app->getConfig('creationtime'), $this->totime()])->order('id ASC')->box('prevpost')->find()->table('comments')->field('id,uid,pid,editime,parent,publicname,comment')->where('pid', $param['id'])->where('status', 3)->order('id DESC')->leftJoin('uid = id')->table('users')->field('avatar,signature')->box('comments')->endJoin()->check->filter(':box(posts)', 'archivesFunc')->filter(':box(nextpost)', 'nextpostFunc')->filter(':box(prevpost)', 'prevpostFunc')->filter(':box(comments)', 'commentsFunc')->output->assign('share')->assign('post', ':box(posts)')->assign('prevpost', ':box(prevpost)')->assign('nextpost', ':box(nextpost)')->assign('comments', ':box(comments)')->assign('commentsoff', true)->display(!empty($this->box->get('posts.template')) ? $this->theme('archives/' . $this->box->get('posts.template')) : $this->theme('post'))->finish();
+    }
+    public function callback($param)
+    {
+        $this->handle->listen('callback', $param);
     }
     protected function share()
     {

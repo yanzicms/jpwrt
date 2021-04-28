@@ -7,10 +7,8 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\plugins\notice;
-
 use app\general\Plugin;
 use jsnpp\Controller;
-
 class Notice extends Controller
 {
     private $notice = 'notice_content';

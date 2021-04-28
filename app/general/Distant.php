@@ -7,7 +7,6 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\general;
-
 class Distant
 {
     public static function get($url, $data)

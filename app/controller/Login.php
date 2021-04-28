@@ -7,10 +7,8 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\controller;
-
 use jsnpp\Controller;
 use jsnpp\Db;
-
 class Login extends Controller
 {
     public function index($param)

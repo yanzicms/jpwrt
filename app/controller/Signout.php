@@ -7,11 +7,9 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\controller;
-
 use jsnpp\Cookie;
 use jsnpp\Route;
 use jsnpp\Session;
-
 class Signout
 {
     public function index(Session $session, Cookie $cookie, Route $route)

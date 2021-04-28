@@ -7,7 +7,6 @@
  * GitHub: https://github.com/yanzicms/jsnpp
  */
 namespace jsnpp;
-
 $jsnpp_dir = __DIR__;
 require $jsnpp_dir . '/vendor/autoload.php';
 (new Application($jsnpp_dir))->jsnpp->startup();

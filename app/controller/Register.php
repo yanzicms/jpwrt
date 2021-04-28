@@ -7,9 +7,7 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\controller;
-
 use jsnpp\Controller;
-
 class Register extends Controller
 {
     public function index($param)

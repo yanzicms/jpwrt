@@ -7,9 +7,7 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\general;
-
 use jsnpp\Tools;
-
 class Theme
 {
     public static function set($group, $current, $description, $content, $post = 'post', $groupinfo = '', $show = true)

@@ -14,7 +14,7 @@
                         {notempty $item.thumbnail}
                         <img src="{$item.thumbnail}" class="float-right ml-3 rounded img-fluid" width="100">
                         {endnotempty}
-                        {$item.summary}
+                        {$item.summary|subtext(200)}
                     </div>
                 </div>
                 <div class="card-footer text-muted bg-white py-1">

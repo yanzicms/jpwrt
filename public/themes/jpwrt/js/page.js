@@ -18,4 +18,5 @@ $(document).ready(function(){
                 }
             });
     });
+    $("#content").find("img").addClass("img-fluid");
 });

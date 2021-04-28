@@ -7,10 +7,9 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\controller;
-
 use jsnpp\Controller;
 use jsnpp\Database;
-
+use jsnpp\Tools;
 class Install extends Controller
 {
     public function index($param)
@@ -343,15 +342,10 @@ class Install extends Controller
                 ];
             }
         }
-        $dbstatement = file_get_contents($this->rootDir . $this->DS . 'assist' . $this->DS . 'data' . $this->DS . trim($this->app->getDb('type')) . '.txt');
-        $dbstatements = explode(';', $dbstatement);
+        $data = Tools::load($this->rootDir . $this->DS . 'config' . $this->DS . 'data.php');
         try{
-            foreach($dbstatements as $val){
-                $val = trim($val);
-                if(!empty($val)){
-                    $val = str_replace('JPWRT_', $param['prefix'], $val);
-                    $database->sql($val);
-                }
+            foreach($data as $key => $val){
+                $database->newTable($key, $val);
             }
             return [
                 'result' => 'ok',
@@ -370,7 +364,7 @@ class Install extends Controller
             return [
                 'result' => 'err',
                 'code' => 3,
-                'message' => $this->lang->translate('Database information error')
+                'message' => $this->lang->translate('Database information error') . $e->getMessage()
             ];
         }
     }

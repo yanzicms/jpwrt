@@ -12,4 +12,5 @@ return [
     'index/page' => 'page/{name}',
     'index/tag' => 'tag/{name}',
     'index/archive' => 'archive/{name}',
+    'index/callback' => 'callback',
 ];

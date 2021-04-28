@@ -22,7 +22,7 @@ return [
     /**
      * 是否开启rewrite
      */
-    'rewrite' => false,
+    'rewrite' => true,
     /**
      * 模板标签开始符
      */
@@ -113,4 +113,5 @@ return [
     'controller' => ['admin', 'index', 'install', 'login', 'register', 'signout'],
     'mainroute' => 'archives',
     'twosegment' => ['category', 'page', 'tag', 'archive'],
+    'alone' => ['callback'],
 ];

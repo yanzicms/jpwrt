@@ -7,7 +7,6 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\general;
-
 class Ladder
 {
     protected static $primary_key = 'id';

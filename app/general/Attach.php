@@ -7,9 +7,7 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\general;
-
 use jsnpp\Tools;
-
 class Attach
 {
     private static $plugin = [];

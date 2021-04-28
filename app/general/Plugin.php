@@ -7,9 +7,7 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\general;
-
 use jsnpp\Tools;
-
 class Plugin
 {
     public static function set($group, $current, $description, $content, $post = 'post', $groupinfo = '', $show = true)
@@ -38,10 +36,13 @@ class Plugin
         if(empty($group)){
             $group = 'plugins';
         }
+        if(empty($post)){
+            $post = '_';
+        }
         $detr = debug_backtrace();
         $classArr = explode('\\', str_replace('/', '\\', $detr[1]['class']));
         $class = lcfirst(end($classArr));
-        $arr = ['_group' => $group, '_current' => $current, '_plugin' => $class, '_post' => $post];
+        $arr = ['_group' => $group, '_current' => $current, '_plugin' => $class, '_theme' => '_non', '_post' => $post];
         if(!empty($param)){
             $arr = array_merge($arr, $param);
         }
@@ -82,6 +83,32 @@ class Plugin
     {
         $name = 'p_' . $name;
         Tools::$app->db->table('take')->where('takename', $name)->removeCache('take_' . $name)->delete()->finish();
+    }
+    public static function addTable($tableName, $tableArray)
+    {
+        $detr = debug_backtrace();
+        $classArr = explode('\\', str_replace('/', '\\', $detr[1]['class']));
+        array_pop($classArr);
+        $prefix = strtolower(end($classArr));
+        $re = Tools::$app->database->newTable($prefix . '_' . $tableName, $tableArray);
+        return $re;
+    }
+    public static function delTable($tableName)
+    {
+        $detr = debug_backtrace();
+        $classArr = explode('\\', str_replace('/', '\\', $detr[1]['class']));
+        array_pop($classArr);
+        $prefix = strtolower(end($classArr));
+        $re = Tools::$app->database->deleteTable($prefix . '_' . $tableName);
+        return $re;
+    }
+    public static function tableName($tableName)
+    {
+        $detr = debug_backtrace();
+        $classArr = explode('\\', str_replace('/', '\\', $detr[1]['class']));
+        array_pop($classArr);
+        $prefix = strtolower(end($classArr));
+        return $prefix . '_' . $tableName;
     }
     public static function administrator()
     {

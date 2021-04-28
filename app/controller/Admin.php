@@ -7,7 +7,6 @@
  * GitHub: https://github.com/yanzicms/jpwrt
  */
 namespace app\controller;
-
 use app\general\Attach;
 use app\general\Distant;
 use app\general\Filter;
@@ -15,7 +14,6 @@ use app\general\Ladder;
 use jsnpp\Cache;
 use jsnpp\Controller;
 use jsnpp\Tools;
-
 class Admin extends Controller
 {
     private $per = 10;
@@ -600,11 +598,13 @@ class Admin extends Controller
             if(is_file($this->rootDir . $this->DS . 'public' . $this->DS . 'themes' . $this->DS . lcfirst($template) . $this->DS . ucfirst($template) . '.php')){
                 $this->handle->run('jpwrt\theme\\' . lcfirst($template) . '\\' . ucfirst($template), 'assign', $param);
                 $this->handle->run('jpwrt\theme\\' . lcfirst($template) . '\\' . ucfirst($template), $param['_current'] . '_assign', $param);
+                $this->handle->run('jpwrt\theme\\' . lcfirst($template) . '\\' . ucfirst($template), $param['_current'], $param);
             }
         }
         else{
             $this->handle->run($param['_plugin'], 'assign', $param);
             $this->handle->run($param['_plugin'], $param['_current'] . '_assign', $param);
+            $this->handle->run($param['_plugin'], $param['_current'], $param);
         }
         $this->view->assign('share')->assign('group', $param['_group'])->assign('current', $param['_current'])->assign('attach', $this->view->template(Attach::getContent($param['_group'], $param['_current'])))->display();
     }
@@ -1294,7 +1294,7 @@ class Admin extends Controller
                 'summary' => Filter::html($param['summary']),
                 'content' => Filter::weedout($param['content'])
             ])
-            ->output->display(':ok')->finish();
+            ->event->listen('editPage', ['id' => $param['id'], 'publish' => ($this->editor() && $param['status'] == 1) ? true : false])->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('pages'))->inbox('id', $param['id'])->db->table('pages')->field('id,title,parent')->box('pages')->order('sort ASC')->select()->table('pages')->field('id,title,slug,keyword,template,thumbnail,editime,visibility,password,status,parent,summary,content')->where('id', $param['id'])->box('page')->find()->check->filter(':box(pages)', 'filternochildFunc')->filter(':box(page)', 'postFunc')->output->assign('share')->assign('group', 'pages')->assign('current', 'allpages')->assign('pages', ':box(pages)')->assign('templates', ':box(templates)')->assign('page', ':box(page)')->display()->finish();
     }
     public function addnewpage($param)
@@ -1317,7 +1317,7 @@ class Admin extends Controller
                 'summary' => Filter::html($param['summary']),
                 'content' => Filter::weedout($param['content'])
             ])
-            ->check->removeSession('uploadimg')->output->display(':ok')->finish();
+            ->check->removeSession('uploadimg')->event->listen('addNewPage', ['id' => $this->box->get('pageid'), 'publish' => ($this->editor() && $param['status'] == 1) ? true : false])->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('pages'))->db->table('pages')->field('id,title,parent')->order('sort ASC')->box('pages')->select()->check->filter(':box(pages)', 'filterFunc')->removeSession('uploadimg')->output->assign('share')->assign('group', 'pages')->assign('current', 'addnewpage')->assign('pages', ':box(pages)')->assign('templates', ':box(templates)')->display()->finish();
     }
     public function deletepage($param)
@@ -1414,7 +1414,7 @@ class Admin extends Controller
     }
     public function review($param)
     {
-        $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('status', $param['review'] == 1 ? 3 : 2)->update()->output->display(':ok')->finish();
+        $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('status', $param['review'] == 1 ? 3 : 2)->update()->event->listen('review', ['id' => $param['id'], 'review' => $param['review'] == 1 ? true : false])->output->display(':ok')->finish();
     }
     public function putontop($param)
     {
@@ -1445,7 +1445,7 @@ class Admin extends Controller
                     'summary' => Filter::html($param['summary']),
                     'content' => Filter::weedout($param['content'])
                 ])
-                ->check->run('edittagsFunc', ':box(updateok)', '>', 0)->deleteCacheTag('posts' . $param['id'])->deleteCache('totime')->output->display(':ok')->finish();
+                ->check->run('edittagsFunc', ':box(updateok)', '>', 0)->deleteCacheTag('posts' . $param['id'])->deleteCache('totime')->event->listen('editPost', ['id' => $param['id'], 'publish' => ($this->editor() && $param['status'] == 1) ? true : false])->output->display(':ok')->finish();
             $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('archives'))->db->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->select()->table('posts')->field('id,cid,title,slug,keyword,template,source,thumbnail,editime,recommend,top,visibility,password,status,summary,content')->where('id', $param['id'])->box('post')->find()->check->filter(':box(categories)', 'filterFunc')->filter(':box(post)', 'postFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('categories', ':box(categories)')->assign('templates', ':box(templates)')->assign('post', ':box(post)')->display()->finish();
         }
         else{
@@ -1467,7 +1467,7 @@ class Admin extends Controller
                     'summary' => Filter::html($param['summary']),
                     'content' => Filter::weedout($param['content'])
                 ])
-                ->check->run('edittagsFunc', ':box(updateok)', '>', 0)->deleteCacheTag('posts' . $param['id'])->output->display(':ok')->finish();
+                ->check->run('edittagsFunc', ':box(updateok)', '>', 0)->deleteCacheTag('posts' . $param['id'])->event->listen('editPost', ['id' => $param['id'], 'publish' => ($param['status'] == 3) ? true : false])->output->display(':ok')->finish();
             $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('archives'))->db->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->select()->table('posts')->field('id,cid,title,slug,keyword,template,source,thumbnail,editime,recommend,top,visibility,password,status,summary,content')->where('id', $param['id'])->where('uid', $this->session->get('id'))->box('post')->find()->check->stop(':box(post)', '=', 'empty', $this->lang->translate('Insufficient permissions.'))->filter(':box(categories)', 'filterFunc')->filter(':box(post)', 'postFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('categories', ':box(categories)')->assign('templates', ':box(templates)')->assign('post', ':box(post)')->display()->finish();
         }
     }
@@ -1501,12 +1501,12 @@ class Admin extends Controller
                 'summary' => Filter::html($param['summary']),
                 'content' => Filter::weedout($param['content'])
             ])->table('users')->where('id', $this->session->get('id'))->data('posts', 'posts+1')->update()->endTransaction()
-            ->check->removeSession('uploadimg')->deleteCacheTag('home')->deleteCache('totime')->run('tagsFunc')->output->display(':ok')->finish();
+            ->check->removeSession('uploadimg')->deleteCacheTag('home')->deleteCache('totime')->run('tagsFunc')->event->listen('addNewPost', ['id' => $this->box->get('postid'), 'publish' => ($this->editor() && $param['status'] == 1) ? true : false])->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('archives'))->db->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->select()->check->filter(':box(categories)', 'filterFunc')->removeSession('uploadimg')->output->assign('share')->assign('group', 'posts')->assign('current', 'addnewpost')->assign('categories', ':box(categories)')->assign('templates', ':box(templates)')->display()->finish();
     }
     private function inreserved($slug)
     {
-        if(!empty($slug) && in_array(strtolower($slug), Tools::arraytolower($this->app->getConfig('controller')))){
+        if(!empty($slug) && (in_array(strtolower($slug), Tools::arraytolower($this->app->getConfig('controller'))) || in_array(strtolower($slug), Tools::arraytolower($this->app->getConfig('alone'))))){
             return true;
         }
         return false;
