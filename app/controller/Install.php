@@ -82,6 +82,11 @@ class Install extends Controller
             'staticpage' => 0,
             'homeshow' => 10,
             'pageshow' => 10,
+            'homeorder' => 'last',
+            'categoryorder' => 'last',
+            'archiveorder' => 'last',
+            'searchorder' => 'last',
+            'tagorder' => 'last',
             'creationtime' => date('Y-m-d H:i:s')
         ]);
         $this->app->db->table('take')->data([

@@ -159,7 +159,7 @@ class Admin extends Controller
         $robotPath = $this->rootDir . $this->DS . 'robots.txt';
         @chmod($robotPath, 0777);
         if($searchengine == 1){
-            file_put_contents($robotPath, 'User-agent: *' . PHP_EOL . 'Disallow:');
+            file_put_contents($robotPath, 'User-agent: *' . PHP_EOL . 'Allow: /');
         }
         else{
             file_put_contents($robotPath, 'User-agent: *' . PHP_EOL . 'Disallow: /');
