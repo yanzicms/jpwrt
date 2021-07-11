@@ -49,4 +49,5 @@ return [
     'Visit the homepage' => 'Visit the homepage',
     'Log in to the background' => 'Log in to the background',
     'Please wait. . .' => 'Please wait. . .',
+    'Database encoding' => 'Database encoding',
 ];

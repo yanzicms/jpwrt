@@ -49,4 +49,5 @@ return [
     'Visit the homepage' => '访问首页',
     'Log in to the background' => '登录后台',
     'Please wait. . .' => '请稍候…',
+    'Database encoding' => '数据库编码',
 ];

@@ -438,23 +438,31 @@ class Index extends Controller
     }
     public function category($param)
     {
-        $this->app->entrance->check('get')->inbox('cid', $this->getcid($param))->db->table('posts')->alias('posts')->field('id,uid,title,slug,keyword,thumbnail,comment,views,createtime,summary')->where('cid', ':box(cid)')->where('visibility', '<', 2)->where('status', 3)->where('trash', 0)->where('createtime', 'BETWEEN', [$this->app->getConfig('creationtime'), $this->totime()])->order('id DESC')->join('uid = id')->table('users')->field('username,publicname,avatar')->join('posts.cid = id')->table('categories')->field('slug as catslug')->paging($this->app->getConfig('pageshow'))->box('posts')->cache($this->cachetime, 'category')->endJoin()->check->filter(':box(posts)', 'indexFunc')->event->listen('category', ':box(posts)')->output->assign('share')->assign('posts', ':box(posts)')->display(!empty($this->box->get('cidarr.template')) ? $this->theme('categories/' . $this->box->get('cidarr.template')) : $this->theme('category'))->finish();
+        $this->app->entrance->check('get')->inbox('cid', $this->getcid($param))->db->table('posts')->alias('posts')->field('id,uid,title,slug,keyword,thumbnail,comment,views,createtime,summary')->where('cid', 'IN', ':box(cid)')->where('visibility', '<', 2)->where('status', 3)->where('trash', 0)->where('createtime', 'BETWEEN', [$this->app->getConfig('creationtime'), $this->totime()])->order('id DESC')->join('uid = id')->table('users')->field('username,publicname,avatar')->join('posts.cid = id')->table('categories')->field('slug as catslug')->paging($this->app->getConfig('pageshow'))->box('posts')->cache($this->cachetime, 'category')->endJoin()->check->filter(':box(posts)', 'indexFunc')->event->listen('category', ':box(posts)')->output->assign('share')->assign('posts', ':box(posts)')->display(!empty($this->box->get('cidarr.template')) ? $this->theme('categories/' . $this->box->get('cidarr.template')) : $this->theme('category'))->finish();
     }
     private function getcid($param)
     {
         if(isset($param['id'])){
-            $this->app->db->table('categories')->field('id,name,keyword,template,description')->where('id', $param['id'])->box('cidarr')->cache($this->cachetime)->find()->finish();
+            $this->app->db->table('categories')->field('id,name,keyword,template,description')->where('id', $param['id'])->box('cidarr')->cache($this->cachetime)->find()->table('categories')->field('id')->where('id', $param['id'])->orWhere('parent', $param['id'])->box('cids')->cache($this->cachetime)->select()->finish();
             $this->sitename = $this->box->get('cidarr.name');
             $this->keywords = $this->box->get('cidarr.keyword');
             $this->description = $this->box->get('cidarr.description');
-            return $param['id'];
+            $ids = [];
+            foreach($this->box->get('cids') as $key => $item){
+                $ids[] = $item['id'];
+            }
+            return $ids;
         }
         elseif(isset($param['name'])){
-            $this->app->db->table('categories')->field('id,name,keyword,template,description')->where('slug', $param['name'])->box('cidarr')->cache($this->cachetime)->find()->finish();
+            $this->app->db->table('categories')->field('id,name,keyword,template,description')->where('slug', $param['name'])->box('cidarr')->cache($this->cachetime)->find()->table('categories')->field('id')->where('id', ':box(cidarr.id)')->orWhere('parent', ':box(cidarr.id)')->box('cids')->cache($this->cachetime)->select()->finish();
             $this->sitename = $this->box->get('cidarr.name');
             $this->keywords = $this->box->get('cidarr.keyword');
             $this->description = $this->box->get('cidarr.description');
-            return $this->box->get('cidarr.id');
+            $ids = [];
+            foreach($this->box->get('cids') as $key => $item){
+                $ids[] = $item['id'];
+            }
+            return $ids;
         }
         return 0;
     }

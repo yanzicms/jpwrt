@@ -21,6 +21,13 @@
                     <input type="text" class="form-control" id="database" name="database" value="jpwrt">
                 </div>
                 <div class="form-group mysql">
+                    <label>{lang('Database encoding')}</label>
+                    <select class="custom-select" id="charset" name="charset">
+                        <option value="utf8" selected>utf8</option>
+                        <option value="utf8mb4">utf8mb4</option>
+                    </select>
+                </div>
+                <div class="form-group mysql">
                     <label for="username">{lang('Database username')}</label>
                     <input type="text" class="form-control" id="username" name="username">
                 </div>

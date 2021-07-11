@@ -333,6 +333,7 @@ class Install extends Controller
             'username' => $param['username'],
             'password' => $param['password'],
             'hostport' => $param['hostport'],
+            'charset' => $param['charset'],
             'prefix' => $param['prefix'],
         ]);
         if(!$database->hasDb($param['database'])){
