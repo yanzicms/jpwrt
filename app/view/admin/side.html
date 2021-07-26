@@ -138,6 +138,7 @@
     <a class="navbar-brand pl-3 pr-4 pt-0 pb-1 m-0 w-100 position-relative firstlevel{if($group == 'tools')} jsnpp_active bg-danger{endif}" href="{url('admin/clearcache')}"><i class="bi bi-tools mr-2"></i>{lang('Tools')}</a>
     <nav class="nav nav-pills flex-column{if($group != 'tools')} jsnpp_submenu{endif}">
         <a class="nav-link rounded-0{if($group == 'tools' && $current == 'clearcache')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/clearcache')}"><span class="ml-3">{lang('Clear cache')}</span></a>
+        <a class="nav-link rounded-0{if($group == 'tools' && $current == 'databasebackup')} text-white font-weight-bold{else} text-white-50{endif}" href="{url('admin/databasebackup')}"><span class="ml-3">{lang('Database backup')}</span></a>
         {notempty $plugin.tools}
         {each $item in $plugin.tools}
         {if($item.show)}

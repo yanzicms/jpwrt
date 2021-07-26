@@ -10,6 +10,6 @@ return [
     /**
      * 版本号
      */
-    'version' => '1.1.6',
+    'version' => '1.2.0',
     'last' => 'aHR0cDovL3d3dy5qcHdydC5jb20vdmVyc2lvbg'
 ];

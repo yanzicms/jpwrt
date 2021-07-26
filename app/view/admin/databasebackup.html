@@ -1,0 +1,61 @@
+{include header}
+<div class="mb-3 h4 float-left">{lang('Database backup')}</div>
+<div class="float-right">
+    <button type="button" id="newbackup" class="btn btn-outline-info btn-sm mx-1" data-title="{lang('Are you sure you want to back up the database?')}" data-alert="{lang('Press “OK” to start backing up the database, otherwise press “Cancel”.')}">
+        <i class="bi bi-files mr-1"></i>{lang('New backup')}
+        <div class="spinner-border spinner-border-sm text-info d-none">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+    <button type="button" id="uploadfile" class="btn btn-outline-info btn-sm mx-1">
+        <i class="bi bi-capslock mr-1"></i>{lang('Upload and restore database')}
+        <div class="spinner-border spinner-border-sm text-info d-none">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </button>
+</div>
+<div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">{lang('Backup file')}</th>
+            <th scope="col">{lang('File size')}</th>
+            <th scope="col">{lang('Manage')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {each $item in $backups}
+        <tr>
+            <th scope="row" class="align-middle">{$order}</th>
+            <td class="align-middle">{$item.file}</td>
+            <td class="align-middle">{$item.size} {lang('Byte')}</td>
+            <td class="align-middle">
+                <a href="#!" class="mx-1 text-info restore" data-file="{$item.file}" data-title="{lang('Are you sure you want to restore the database?')}" data-alert="{lang('Restoring the database will destroy the existing data and is irrecoverable.')}">
+                    {lang('Restore the database')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+                <a href="#!" class="mx-1 text-info delete" data-file="{$item.file}" data-title="{lang('You sure you want to delete it?')}" data-alert="{lang('Once deleted, it cannot be restored!')}">
+                    {lang('Delete')}
+                    <div class="spinner-border spinner-border-sm text-info d-none">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </a>
+                <a class="text-info mx-1" href="{$item.path}" download="{$item.file}">{lang('Download')}</a>
+            </td>
+        </tr>
+        {endeach}
+        </tbody>
+    </table>
+</div>
+<div class="d-none">
+    <div id="restoreok">{lang('Download')}</div>
+    <div id="restorecontent">{lang('The database has been restored successfully!')}</div>
+    <div id="uploadok">{lang('Already restored')}</div>
+    <div id="uploadcontent">{lang('The database has been restored successfully!')}</div>
+</div>
+<script src="{$webroot}public/static/js/uploadfile.js"></script>
+<script src="{$webroot}public/static/js/databasebackup.js"></script>
+{include footer}

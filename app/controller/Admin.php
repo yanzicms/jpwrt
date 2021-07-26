@@ -13,6 +13,7 @@ use app\general\Filter;
 use app\general\Ladder;
 use jsnpp\Cache;
 use jsnpp\Controller;
+use jsnpp\Database;
 use jsnpp\Tools;
 class Admin extends Controller
 {
@@ -209,12 +210,12 @@ class Admin extends Controller
     }
     private function incustom($custom)
     {
-        $re = true;
+        $re = false;
         if(!empty($custom)){
             $carr = explode('/', $custom);
             foreach($carr as $val){
-                if(!in_array($val, ['{id}', '{name}', '{year}', '{month}', '{day}', '{category}', '{author}'])){
-                    $re = false;
+                if(in_array($val, ['{id}', '{name}', '{year}', '{month}', '{day}', '{category}', '{author}'])){
+                    $re = true;
                     break;
                 }
             }
@@ -1840,6 +1841,220 @@ class Admin extends Controller
     {
         $cache->clear();
     }
+    public function databasebackup()
+    {
+        $this->app->entrance->check('get')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->output->assign('share')->assign('group', 'tools')->assign('current', 'databasebackup')->assign('backups', $this->getbackups())->display()->finish();
+    }
+    private function getbackupath()
+    {
+        $backup = trim($this->getTake('dbackup'));
+        if(empty($backup)){
+            $backup = 'public/backup';
+            $this->setTake('dbackup', 'public/backup', 'need', 'general');
+        }
+        $backup = str_replace('\\', '/', $backup);
+        return trim(trim($backup, '/'));
+    }
+    private function newdir($dirpath, $permissions = 0777)
+    {
+        @mkdir($dirpath, $permissions, true);
+        if(is_dir($dirpath)){
+            @file_put_contents($dirpath . $this->DS . 'index.html', base64_decode('PCFET0NUWVBFIGh0bWw+DQo8aHRtbCBsYW5nPSJ6aC1jbiI+DQo8aGVhZD4NCiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+DQogICAgPHRpdGxlPjQwNDwvdGl0bGU+DQo8L2hlYWQ+DQo8Ym9keT4NClBhZ2Ugbm90IGZvdW5kDQo8L2JvZHk+DQo8L2h0bWw+'));
+        }
+    }
+    private function getbackups()
+    {
+        $backupu = $this->getbackupath();
+        $backup = str_replace('/', $this->DS, $backupu);
+        $backupath = $this->rootDir . $this->DS . $backup;
+        if(!is_dir($backupath)){
+            $this->newdir($backupath);
+        }
+        $backupdir = glob($backupath . $this->DS . '*.zip', GLOB_NOSORT);
+        if(!empty($backupdir)){
+            usort($backupdir,function($a, $b){
+                return filemtime($b) - filemtime($a);
+            });
+        }
+        $backuparr = [];
+        foreach($backupdir as $val){
+            $name = basename($val);
+            $backuparr[] = [
+                'file' => $name,
+                'size' => filesize($val),
+                'path' => $this->route->rootUrl() . $backupu . '/' . $name
+            ];
+        }
+        return $backuparr;
+    }
+    public function newbackup()
+    {
+        $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->run('newbackupFunc')->output->display(':ok')->finish();
+    }
+    protected function newbackupFunc(Database $database)
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', -1);
+        $tables = $database->getTables($this->app->getDb('database'));
+        $prefix = $this->app->getDb('prefix');
+        $prefixlen = strlen($prefix);
+        $bkstr = '';
+        foreach($tables as $table){
+            $tablename = substr($table, $prefixlen);
+            $fields = $database->getFields($table);
+            $field = '';
+            foreach($fields as $val){
+                if(empty($field)){
+                    $field = '`'.$val.'`';
+                }
+                else{
+                    $field .= ', `'.$val.'`';
+                }
+            }
+            $this->app->db->table($tablename)->field(implode(',', $fields))->box($tablename)->select()->finish();
+            $result = $this->box->get($tablename);
+            $tmp = '';
+            if(is_array($result) && count($result) > 0){
+                $i = 0;
+                foreach($result as $rec){
+                    $str = '';
+                    foreach($rec as $key => $srec){
+                        if(empty($str)){
+                            $str = $this->strint($srec);
+                        }
+                        else{
+                            $str .= ', '.$this->strint($srec);
+                        }
+                    }
+                    if(empty($tmp)){
+                        $tmp .= '('.$str.')';
+                    }
+                    else{
+                        $tmp .= ',('.$str.')';
+                    }
+                    $i ++ ;
+                    if($i > 50){
+                        $this->harfinsert($tablename, $field, $tmp, $bkstr);
+                        $tmp = '';
+                        $i = 0;
+                    }
+                }
+                if(!empty($tmp)){
+                    $this->harfinsert($tablename, $field, $tmp, $bkstr);
+                }
+            }
+        }
+        $name = 'jpwrt' . substr(md5(time() . '-' . $prefix . '-' . rand()), 16) . '_' . date('YmdHis') . '.zip';
+        $bkstr = '-- ' . $name . PHP_EOL . '-- JPWRT database backup' . PHP_EOL . '-- Generated date：' . date('Y-m-d H: i: s') . PHP_EOL . $bkstr;
+        $backup = $this->getbackupath();
+        $backup = str_replace('/', $this->DS, $backup);
+        $backupath = $this->rootDir . $this->DS . $backup;
+        if(!is_dir($backupath)){
+            $this->newdir($backupath);
+        }
+        $backupfile = $backupath . $this->DS . $name;
+        file_put_contents($backupfile, gzcompress($bkstr));
+    }
+    private function strint($si)
+    {
+        if($si === null){
+            return 'NULL';
+        }
+        elseif(is_int($si)){
+            return intval($si);
+        }
+        else{
+            return '\''.str_replace('\'','\'\'',$si).'\'';
+        }
+    }
+    private function delimiter()
+    {
+        return '--BASE-JSNPP-FRAMEWORK->JPWRT';
+    }
+    protected function harfinsert($tablename, $field, &$value, &$bkstr)
+    {
+        $restr = $tablename.'` ('.$field.') VALUES'.$value.';' . PHP_EOL;
+        $bkstr .= $this->delimiter() . PHP_EOL . $restr;
+    }
+    public function uploadbackup()
+    {
+        $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->upload->setName('file')->check('ext', 'zip')->save('assist/backup')->box('zipname')->check->param(':box(zipname)')->run('uploadbackupFunc')->box('isrestore')->output->display(':box(isrestore)')->finish();
+    }
+    protected function uploadbackupFunc(Database $database, $file)
+    {
+        $file = str_replace('/', $this->DS, $file);
+        $backupfile = $this->rootDir . $this->DS . $file;
+        if(is_file($backupfile)){
+            $re = $this->restoredb($database, $backupfile);
+            if($re == 'ok'){
+                @unlink($backupfile);
+            }
+            return $re;
+        }
+        else{
+            return $this->lang->translate('The file was not found.');
+        }
+    }
+    public function restorebackup($param)
+    {
+        $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->param($param['file'])->run('restorebackupFunc')->box('isrestore')->output->display(':box(isrestore)')->finish();
+    }
+    protected function restorebackupFunc(Database $database, $file)
+    {
+        $backupu = $this->getbackupath();
+        $backup = str_replace('/', $this->DS, $backupu);
+        $backupfile = $this->rootDir . $this->DS . $backup . $this->DS . $file;
+        if(is_file($backupfile)){
+            return $this->restoredb($database, $backupfile);
+        }
+        else{
+            return $this->lang->translate('The file was not found.');
+        }
+    }
+    private function restoredb(Database $database, $file)
+    {
+        $bkf = gzuncompress(file_get_contents($file));
+        $bkarr = explode($this->delimiter(), $bkf);
+        $firststr = array_shift($bkarr);
+        $annotation = explode('--', trim($firststr, '-'));
+        $annotation = array_map(function($v){
+            return trim($v);
+        },$annotation);
+        if($annotation[0] == basename($file) || $annotation[1] == 'JPWRT database backup'){
+            ini_set('max_execution_time', 0);
+            ini_set('memory_limit', -1);
+            $tables = $database->getTables($this->app->getDb('database'));
+            $prefix = $this->app->getDb('prefix');
+            try{
+                foreach($tables as $table){
+                    $database->clearTable($table);
+                }
+                foreach($bkarr as $sqlstr){
+                    $database->sql('INSERT INTO `' . $prefix . trim($sqlstr));
+                }
+                return 'ok';
+            }
+            catch(\Exception $e){
+                return $e->getMessage();
+            }
+        }
+        else{
+            return $this->lang->translate('Invalid file.');
+        }
+    }
+    public function deletebackup($param)
+    {
+        $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->param($param['file'])->run('deletebackupFunc')->output->display(':ok')->finish();
+    }
+    protected function deletebackupFunc($file)
+    {
+        $backupu = $this->getbackupath();
+        $backup = str_replace('/', $this->DS, $backupu);
+        $backupfile = $this->rootDir . $this->DS . $backup . $this->DS . $file;
+        if(is_file($backupfile)){
+            @unlink($backupfile);
+        }
+    }
     public function visit($param)
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['siteAddress'], 'url', $this->lang->translate('Incorrect site address format'))->config->writeCustomize('site', [
@@ -1956,11 +2171,11 @@ class Admin extends Controller
         $this->app->db->table('take')->field('takevalue')->where('takename', $name)->cache(1200, 'take_' . $name)->box('take')->find()->finish();
         return $this->box->get('take.takevalue');
     }
-    private function setTake($name, $value)
+    private function setTake($name, $value, $type = '', $backstage = '')
     {
         $this->app->db->table('take')->field('id')->where('takename', $name)->box('take_' . $name)->find()->finish();
         if(empty($this->box->get('take_' . $name))){
-            $this->app->db->table('take')->data('takename', $name)->data('takevalue', $value)->removeCache('take_' . $name)->insert()->finish();
+            $this->app->db->table('take')->data('takename', $name)->data('takevalue', $value)->data('taketype', $type)->data('backstage', $backstage)->removeCache('take_' . $name)->insert()->finish();
         }
         else{
             $this->app->db->table('take')->where('takename', $name)->data('takevalue', $value)->removeCache('take_' . $name)->update()->finish();
