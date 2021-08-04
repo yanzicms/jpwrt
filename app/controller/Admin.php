@@ -1756,6 +1756,21 @@ class Admin extends Controller
             ->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('categories'))->db->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->select()->check->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'categories')->assign('current', 'addnewcategory')->assign('categories', ':box(categories)')->assign('templates', ':box(templates)')->display()->finish();
     }
+    public function addfirstcategory($param)
+    {
+        $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the category must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the category must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))
+            ->db->table('categories')->field('id')->where('name', $param['name'])->box('hasname')->find()
+            ->db->table('categories')->field('id')->where('slug', $param['slug'])->box('hasslug')->find()
+            ->check->stop(':box(hasname)', '!=', 'empty', $this->lang->translate('The category name already exists, please change and continue.'))
+            ->stop(':box(hasslug)', '!=', 'empty', $this->lang->translate('The slug already exists, please change and continue.'))
+            ->db->table('categories')->box('categoryid')->insert([
+                'name' => Filter::html($param['name']),
+                'slug' => Filter::html($param['slug']),
+                'keyword' => isset($param['keyword']) ? Filter::html($param['keyword']) : Filter::html($param['name']),
+                'description' => Filter::html($param['description'])
+            ])
+            ->output->display(':ok', ['id' => ':box(categoryid)'])->finish();
+    }
     public function allcategories()
     {
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('categories')->field('id,name,slug,template,description,sort,parent')->order('sort ASC')->box('categories')->select()->check->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'categories')->assign('current', 'allcategories')->assign('categories', ':box(categories)')->display()->finish();

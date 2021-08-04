@@ -28,7 +28,7 @@
             <small class="form-text text-muted">{lang('The summary is a paragraph of text that summarizes the content. If it is not filled in, it will be generated based on the content.')}</small>
         </div>
         <div class="form-group">
-            <label for="category">{lang('Category')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+            <label for="category">{lang('Category')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small>{empty $categories}<small id="categoryfirstadd" class="ml-2">[&nbsp;<a href="#!" data-toggle="modal" data-target="#addcategory">{lang('Add new category')}</a>&nbsp;]</small>{endempty}</label>
             <select class="custom-select" id="category" name="category">
                 <option value="">{lang('Please select a category')}</option>
                 {each $item in $categories}
@@ -147,6 +147,46 @@
             </div>
         </button>
     </form>
+</div>
+<div class="modal fade" id="addcategory" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{lang('Add new category')}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="name">{lang('Name ')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+                        <input type="text" class="form-control" id="name" name="name" maxlength="100">
+                        <small class="form-text text-muted">{lang('The name is how it appears on your site.')}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="slug">{lang('Slug')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small></label>
+                        <input type="text" class="form-control" id="cslug" name="slug" maxlength="100">
+                        <small class="form-text text-muted">{lang('The “slug” is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.')}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">{lang('Description')}</label>
+                        <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                        <small class="form-text text-muted">{lang('The description is not prominent by default; however, some themes may show it.')}</small>
+                    </div>
+                    <button type="button" id="submitcategory" class="btn btn-outline-info">
+                        {lang('Save')}
+                        <div class="spinner-border spinner-border-sm text-secondary d-none">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">{lang('Close')}</button>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="{$webroot}public/static/HandyEditor/HandyEditor.min.js"></script>
 <script src="{$webroot}public/static/js/uploadfile.js"></script>
