@@ -28,7 +28,7 @@
             <small class="form-text text-muted">{lang('The summary is a paragraph of text that summarizes the content. If it is not filled in, it will be generated based on the content.')}</small>
         </div>
         <div class="form-group">
-            <label for="category">{lang('Category')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small>{empty $categories}<small id="categoryfirstadd" class="ml-2">[&nbsp;<a href="#!" data-toggle="modal" data-target="#addcategory">{lang('Add new category')}</a>&nbsp;]</small>{endempty}</label>
+            <label for="category">{lang('Category')}<small><i class="bi bi-asterisk ml-2 text-secondary"></i></small>{empty $categories}<small id="categoryfirstadd" class="ml-2">[&nbsp;<a href="#!" class="text-info" data-toggle="modal" data-target="#addcategory">{lang('Add new category')}</a>&nbsp;]</small>{endempty}</label>
             <select class="custom-select" id="category" name="category">
                 <option value="">{lang('Please select a category')}</option>
                 {each $item in $categories}
