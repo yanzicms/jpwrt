@@ -837,4 +837,8 @@ return [
     'Byte' => '字节',
     'The file was not found.' => '文件没找到。',
     'Invalid file.' => '无效的文件。',
+    'Search' => '搜索',
+    'Start time' => '开始时间',
+    'End time' => '结束时间',
+    'Choose category' => '选择分类',
 ];

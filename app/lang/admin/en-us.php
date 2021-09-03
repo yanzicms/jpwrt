@@ -832,4 +832,8 @@ return [
     'Byte' => 'Byte',
     'The file was not found.' => 'The file was not found.',
     'Invalid file.' => 'Invalid file.',
+    'Search' => 'Search',
+    'Start time' => 'Start time',
+    'End time' => 'End time',
+    'Choose category' => 'Choose category',
 ];

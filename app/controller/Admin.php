@@ -1395,14 +1395,67 @@ class Admin extends Controller
             $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->field('id')->where('id', $param['id'])->where('uid', $this->session->get('id'))->box('hasmy')->find()->check->stop(':box(hasmy)', '==', 'empty', $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('trash', 1)->data('trashuid', $this->session->get('id'))->update()->check->deleteCacheTag('posts' . $param['id'])->output->display(':ok')->finish();
         }
     }
-    public function allposts()
+    public function allposts($param)
     {
+		unset($param['page']);
         if($this->editor()){
-            $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->where('trash', 0)->whereAnd('uid', $this->session->get('id'))->whereOr('uid', '!=', $this->session->get('id'))->where('status', '>', 0)->where('visibility', '<', 2)->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->check->filter(':box(posts)', 'allpostsFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->display()->finish();
+            if(empty($param)){
+                $param = [
+                    'keywords' => '',
+                    'author' => '',
+                    'categories' => 0,
+                    'startdate' => '',
+                    'enddate' => ''
+                ];
+                $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->where('trash', 0)->whereAnd('uid', $this->session->get('id'))->whereOr('uid', '!=', $this->session->get('id'))->where('status', '>', 0)->where('visibility', '<', 2)->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->cache(600, 'bgcategories')->select()->check->filter(':box(posts)', 'allpostsFunc')->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->assign('categories', ':box(categories)')->assign('search', $param)->assign('isearch', false)->display()->finish();
+            }
+            else{
+                $agparam = $this->arrangeparam($param);
+                if($agparam['categories'] == 0){
+                    $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->where('trash', 0)->where('title', 'LIKE', '%' . $agparam['keywords'] . '%')->where('createtime', 'BETWEEN', [$agparam['startdate'], $agparam['enddate']])->whereAnd('uid', $this->session->get('id'))->whereOr('uid', '!=', $this->session->get('id'))->where('status', '>', 0)->where('visibility', '<', 2)->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->where('username', 'LIKE', '%' . $agparam['author'] . '%')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->cache(600, 'bgcategories')->select()->check->filter(':box(posts)', 'allpostsFunc')->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->assign('categories', ':box(categories)')->assign('search', $param)->assign('isearch', true)->display()->finish();
+                }
+                else{
+                    $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->where('trash', 0)->where('cid', $agparam['categories'])->where('title', 'LIKE', '%' . $agparam['keywords'] . '%')->where('createtime', 'BETWEEN', [$agparam['startdate'], $agparam['enddate']])->whereAnd('uid', $this->session->get('id'))->whereOr('uid', '!=', $this->session->get('id'))->where('status', '>', 0)->where('visibility', '<', 2)->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->where('username', 'LIKE', '%' . $agparam['author'] . '%')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->cache(600, 'bgcategories')->select()->check->filter(':box(posts)', 'allpostsFunc')->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->assign('categories', ':box(categories)')->assign('search', $param)->assign('isearch', true)->display()->finish();
+                }
+            }
         }
         else{
-            $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->where('uid', $this->session->get('id'))->where('trash', 0)->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->check->filter(':box(posts)', 'allpostsFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->display()->finish();
+            if(empty($param)){
+                $param = [
+                    'keywords' => '',
+                    'author' => '',
+                    'categories' => 0,
+                    'startdate' => '',
+                    'enddate' => ''
+                ];
+                $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->where('uid', $this->session->get('id'))->where('trash', 0)->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->cache(600, 'bgcategories')->select()->check->filter(':box(posts)', 'allpostsFunc')->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->assign('categories', ':box(categories)')->assign('search', $param)->assign('isearch', false)->display()->finish();
+            }
+            else{
+                $agparam = $this->arrangeparam($param);
+                if($agparam['categories'] == 0){
+                    $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->where('uid', $this->session->get('id'))->where('trash', 0)->where('title', 'LIKE', '%' . $agparam['keywords'] . '%')->where('createtime', 'BETWEEN', [$agparam['startdate'], $agparam['enddate']])->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->cache(600, 'bgcategories')->select()->check->filter(':box(posts)', 'allpostsFunc')->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->assign('categories', ':box(categories)')->assign('search', $param)->assign('isearch', true)->display()->finish();
+                }
+                else{
+                    $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->alias('posts')->where('uid', $this->session->get('id'))->where('trash', 0)->where('cid', $agparam['categories'])->where('title', 'LIKE', '%' . $agparam['keywords'] . '%')->where('createtime', 'BETWEEN', [$agparam['startdate'], $agparam['enddate']])->field('id,uid,cid,title,slug,thumbnail,comment,views,createtime,editime,recommend,top,commentsoff,visibility,status')->order('id DESC')->leftJoin('uid = id')->table('users')->field('username')->leftJoin('posts.cid = id')->table('categories')->field('name,slug as catslug')->paging($this->per)->box('posts')->endJoin()->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->cache(600, 'bgcategories')->select()->check->filter(':box(posts)', 'allpostsFunc')->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'posts')->assign('current', 'allposts')->assign('posts', ':box(posts)')->assign('categories', ':box(categories)')->assign('search', $param)->assign('isearch', true)->display()->finish();
+                }
+            }
         }
+    }
+    private function arrangeparam($param)
+    {
+        if(empty($param['startdate'])){
+            $param['startdate'] = $this->app->getConfig('creationtime');
+        }
+        else{
+            $param['startdate'] = date('Y-m-d H:i:s', strtotime($param['startdate']));
+        }
+        if(empty($param['enddate'])){
+            $param['enddate'] = date('Y-m-d H:i:s');
+        }
+        else{
+            $param['enddate'] = date('Y-m-d H:i:s', strtotime($param['enddate']));
+        }
+        return $param;
     }
     protected function allpostsFunc($param)
     {
@@ -1481,7 +1534,7 @@ class Admin extends Controller
     }
     public function addnewpost($param)
     {
-        !$this->request->isPost() || $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the post must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the post must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check(!$this->inreserved($param['slug']), $this->lang->translate('The slug is not available, please change and continue.'))->check($param['content'], 'require', $this->lang->translate('The content of the post must be filled in.'))->check($param['category'], 'require', $this->lang->translate('The category must be selected.'))->inbox('tags', $param['tags'])
+        !$this->request->isPost() || $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the post must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the post must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check(!$this->inreserved($param['slug']), $this->lang->translate('The slug is not available, please change and continue.'))->check($param['content'], 'require', $this->lang->translate('The content of the post must be filled in.'))->check($param['category'], 'require', $this->lang->translate('The category must be selected.'))->inbox('tags', isset($param['tags']) ? $param['tags'] : '')
             ->db->table('posts')->field('id')->where('slug', $param['slug'])->where('slug', '!=', '')->box('hasslug')->find()
             ->check->stop(':box(hasslug)', '!=', 'empty', $this->lang->translate('The slug already exists, please change and continue.'))
             ->db->beginTransaction()->table('posts')->box('postid')->insert([
@@ -1489,8 +1542,8 @@ class Admin extends Controller
                 'cid' => intval($param['category']),
                 'title' => Filter::html($param['title']),
                 'slug' => Filter::html($param['slug']),
-                'keyword' => Filter::html($param['tags']),
-                'template' => Filter::html($param['template']),
+                'keyword' => Filter::html(isset($param['tags']) ? $param['tags'] : ''),
+                'template' => Filter::html(isset($param['template']) ? $param['template'] : ''),
                 'thumbnail' => Filter::html($this->session->has('uploadimg') ? $this->session->get('uploadimg') : ''),
                 'createtime' => date('Y-m-d H:i:s'),
                 'editime' => empty($param['date']) ? date('Y-m-d H:i:s') : date('Y-m-d H:i:s', strtotime($param['date'] . ' ' . $param['time'])),

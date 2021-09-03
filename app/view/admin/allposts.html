@@ -1,7 +1,62 @@
 {include header}
 <div class="mb-3 h4 float-left">{lang('All posts')}</div>
 <div class="float-right">
-    <a class="btn btn-outline-info btn-sm" href="{url('admin/addnewpost')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('Add new post')}</a>
+    <button type="button" id="searchposts" class="btn btn-outline-info btn-sm mx-1{if $isearch == true} d-none{endif}"><i class="bi bi-search mr-1"></i>{lang('Search')}</button>
+    <a class="btn btn-outline-info btn-sm mx-1" href="{url('admin/addnewpost')}" role="button"><i class="bi bi-plus mr-1"></i>{lang('Add new post')}</a>
+</div>
+<div class="clearfix"></div>
+<div class="mb-2" id="searchdiv"{if $isearch == false} style="display: none"{endif}>
+    <div class="card">
+        <div class="card-body pt-3 pb-1 pl-2">
+            <button type="button" id="closebutton" class="close float-right" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form method="get">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label class="sr-only" for="keywords">{lang('Key words')}</label>
+                        <input type="text" class="form-control mb-2" id="keywords" name="keywords" value="{$search.keywords}" placeholder="{lang('Key words')}">
+                    </div>
+                    {if($editor)}
+                    <div class="col-auto">
+                        <label class="sr-only" for="author">{lang('Author')}</label>
+                        <input type="text" class="form-control mb-2" id="author" name="author" value="{$search.author}" placeholder="{lang('Author')}">
+                    </div>
+                    {endif}
+                    <div class="col-auto">
+                        <label class="sr-only" for="categories">{lang('Categories')}</label>
+                        <select class="custom-select mb-2" id="categories" name="categories">
+                            <option value="0">{lang('Choose category')}</option>
+                            {each $item in $categories}
+                            <option value="{$item.id}"{if($search.categories == $item.id)} selected="selected"{endif}>{$item.level}{$item.name}</option>
+                            {endeach}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label class="sr-only" for="startdate">{lang('Start time')}</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">{lang('Start time')}</div>
+                            </div>
+                            <input type="date" class="form-control" id="startdate" name="startdate" value="{$search.startdate}">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <label class="sr-only" for="enddate">{lang('End time')}</label>
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">{lang('End time')}</div>
+                            </div>
+                            <input type="date" class="form-control" id="enddate" name="enddate" value="{$search.enddate}">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-info mb-2"><i class="bi bi-search mr-1"></i>{lang('Search')}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <div>
     <table class="table table-hover">

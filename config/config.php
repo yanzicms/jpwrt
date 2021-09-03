@@ -18,7 +18,7 @@ return [
     /**
      * 语言zh-cn，en-us
      */
-    'language' => 'zh-cn',
+    'language' => 'en-us',
     /**
      * 是否开启rewrite
      */
