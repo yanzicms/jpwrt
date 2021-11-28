@@ -10,7 +10,7 @@ namespace app\controller;
 use jsnpp\Controller;
 class Register extends Controller
 {
-    public function index($param)
+    public function index($param = '')
     {
         $this->app->entrance->check('post')
             ->check($param['username'], [

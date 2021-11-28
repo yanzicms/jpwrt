@@ -11,7 +11,7 @@ use jsnpp\Controller;
 use jsnpp\Db;
 class Login extends Controller
 {
-    public function index($param)
+    public function index($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($param['username'], [
             'require' => $this->lang->translate('Username must be filled in'),

@@ -63,7 +63,7 @@ class Admin extends Controller
         }
         return $this->lang->translate($themeName);
     }
-    public function draft($param)
+    public function draft($param = '')
     {
         $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the post must be filled in.'))->check($param['content'], 'require', $this->lang->translate('The content of the post must be filled in.'))
             ->db->beginTransaction()->table('posts')->box('postid')->insert([
@@ -85,11 +85,11 @@ class Admin extends Controller
             $this->app->entrance->check('get')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('comments')->where('uid', $this->session->get('id'))->field('id,pid,editime,status,publicname,email,comment')->order('status ASC,id DESC')->paging($this->per)->box('comments')->select()->output->assign('share')->assign('group', 'comments')->assign('current', 'comments')->assign('comments', ':box(comments)')->display()->finish();
         }
     }
-    public function reviewcomments($param)
+    public function reviewcomments($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('comments')->where('id', $param['id'])->data('status', $param['review'] == 1 ? 3 : 1)->update()->check->deleteCacheTag('posts' . $param['pid'])->output->display(':ok')->finish();
     }
-    public function deletecomments($param)
+    public function deletecomments($param = '')
     {
         if($this->editor()){
             $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('comments')->field('uid,parent')->where('id', $param['id'])->box('comments')->find()->beginTransaction()->table('comments')->where('id', $param['id'])->delete()->table('comments')->where('parent', $param['id'])->data('parent', ':box(comments.parent)')->update()->table('users')->where('id', ':box(comments.uid)')->data('comments', 'comments-1')->update()->endTransaction()->output->display(':ok')->finish();
@@ -98,13 +98,13 @@ class Admin extends Controller
             $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('comments')->field('parent')->where('id', $param['id'])->where('uid', $this->session->get('id'))->box('comments')->find()->beginTransaction()->table('comments')->where('id', $param['id'])->where('uid', $this->session->get('id'))->delete()->table('comments')->where('parent', $param['id'])->where('uid', $this->session->get('id'))->data('parent', ':box(comments.parent)')->update()->table('users')->where('id', $this->session->get('id'))->data('comments', 'comments-1')->update()->endTransaction()->output->display(':ok')->finish();
         }
     }
-    public function originalpost($param)
+    public function originalpost($param = '')
     {
         $this->app->entrance->check('get')->db->table('posts')->field('id,uid,cid,slug,createtime')->where('id', $param['id'])->box('posts')->find()->table('users')->field('username')->where('id', ':box(posts.uid)')->box('users')->find()->table('categories')->field('slug')->where('id', ':box(posts.cid)')->box('categories')->find()->finish();
         $this->route->redirect('index/archives', ['id' => $this->box->get('posts.id'), 'name' => $this->box->get('posts.slug'), 'category' => $this->box->get('categories.slug'), 'author' => $this->box->get('users.username'), 'year' => date('Y', strtotime($this->box->get('posts.createtime'))), 'month' => date('m', strtotime($this->box->get('posts.createtime'))), 'day' => date('d', strtotime($this->box->get('posts.createtime')))]);
         exit();
     }
-    public function discussion($param)
+    public function discussion($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['closeday'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['nested'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['perdisplay'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check->param($param)->run('discussionFunc')->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('take')->field('id,takename,takevalue')->where('backstage', 'discussion')->box('discussion')->select()->check->filter(':box(discussion)', 'filtergeneralFunc')->output->assign('share')->assign('group', 'settings')->assign('current', 'discussion')->assign('discussion', ':box(discussion)')->display()->finish();
@@ -126,7 +126,7 @@ class Admin extends Controller
         $this->setTake('reviewkeywords', $param['reviewkeywords']);
         $this->setTake('rejectkeywords', $param['rejectkeywords']);
     }
-    public function media($param)
+    public function media($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['thumbnail-width'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['thumbnail-height'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['medium-width'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['medium-height'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['large-width'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['large-height'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['slide-width'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check($param['slide-height'], 'positiveInteger', $this->lang->translate('Only positive integers can be filled in.'))->check->param($param)->run('mediaFunc')->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('take')->field('id,takename,takevalue')->where('backstage', 'media')->box('media')->select()->check->filter(':box(media)', 'filtergeneralFunc')->output->assign('share')->assign('group', 'settings')->assign('current', 'media')->assign('media', ':box(media)')->display()->finish();
@@ -142,7 +142,7 @@ class Admin extends Controller
         $this->setTake('slide-width', intval($param['slide-width']));
         $this->setTake('slide-height', intval($param['slide-height']));
     }
-    public function reading($param)
+    public function reading($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check(!($param['homepage'] == 'static' && $param['staticpage'] == 0), $this->lang->translate('The page must be selected.'))->check->param($param)->run('readingFunc')->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('take')->field('id,takename,takevalue')->where('backstage', 'reading')->box('reading')->select()->table('pages')->field('id,title,parent')->order('sort ASC')->box('pages')->select()->check->filter(':box(pages)', 'filterFunc')->filter(':box(reading)', 'filtergeneralFunc')->output->assign('share')->assign('group', 'settings')->assign('current', 'reading')->assign('reading', ':box(reading)')->assign('pages', ':box(pages)')->assign('homepage', $this->app->getConfig('homepage'))->assign('staticpage', $this->app->getConfig('staticpage'))->assign('homeshow', $this->app->getConfig('homeshow'))->assign('pageshow', $this->app->getConfig('pageshow'))->display()->finish();
@@ -166,7 +166,7 @@ class Admin extends Controller
             file_put_contents($robotPath, 'User-agent: *' . PHP_EOL . 'Disallow: /');
         }
     }
-    public function permalinks($param)
+    public function permalinks($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['permalink'], 'require', $this->lang->translate('Permalink must be selected.'))->check($this->incustom($param['custom']), $this->lang->translate('Custom structure tag error.'))->check($param['category'], 'alpha', $this->lang->translate('The category prefix can only contain letters.'))->check($param['tag'], 'alpha', $this->lang->translate('The tag prefix can only contain letters.'))
             ->config->writeRouting([
@@ -222,7 +222,7 @@ class Admin extends Controller
         }
         return $re;
     }
-    public function profile($param)
+    public function profile($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->subscriber(), $this->lang->translate('Insufficient permissions.'))->check($param['nickname'], 'require', $this->lang->translate('The nickname must be filled in.'))->check($param['email'], 'require', $this->lang->translate('E-mail must be filled in.'))->check($param['email'], 'email', $this->lang->translate('Incorrect email format.'))
             ->db->table('users')->where('id', $this->session->get('id'))->update([
@@ -246,11 +246,11 @@ class Admin extends Controller
     {
         $this->app->entrance->check('post')->check($this->subscriber(), $this->lang->translate('Insufficient permissions.'))->db->table('users')->field('id,avatar')->where('id', $this->session->get('id'))->box('users')->find()->check->run('deleteimgedituserFunc')->output->display(':ok')->finish();
     }
-    public function deletuser($param)
+    public function deletuser($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->check($param['id'] != 1, $this->lang->translate('Insufficient permissions.'))->check($param['id'] != $this->session->get('id'), $this->lang->translate('You cannot delete yourself.'))->db->table('posts')->field('id')->where('uid', $param['id'])->box('posts')->find()->table('users')->field('id,avatar')->where('id', $param['id'])->box('users')->find()->check->stop(':box(posts)', '!=', 'empty', $this->lang->translate('This user has published posts and cannot be deleted. Please clear the posts before proceeding.'))->db->beginTransaction()->table('users')->where('id', $param['id'])->delete()->table('comments')->where('uid', $param['id'])->delete()->endTransaction()->check->run('uploadimgedituserFunc')->output->display(':ok')->finish();
     }
-    public function edituser($param)
+    public function edituser($param = '')
     {
         if($this->administrator()){
             !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['nickname'], 'require', $this->lang->translate('The nickname must be filled in.'))->check($param['email'], 'require', $this->lang->translate('E-mail must be filled in.'))->check($param['email'], 'email', $this->lang->translate('Incorrect email format.'))
@@ -284,7 +284,7 @@ class Admin extends Controller
             $this->app->entrance->check('get')->check($this->subscriber(), $this->lang->translate('Insufficient permissions.'))->inbox('id', $this->session->get('id'))->db->table('users')->field('id,username,nickname,firstname,lastname,publicname,email,url,avatar,signature,usertype,language')->where('id', $this->session->get('id'))->box('users')->find()->check->filter(':box(users)', 'filterEditUsersFunc')->output->assign('share')->assign('group', 'users')->assign('current', 'allusers')->assign('users', ':box(users)')->display()->finish();
         }
     }
-    public function deleteimgedituser($param)
+    public function deleteimgedituser($param = '')
     {
         if($this->request->isPost() && $this->administrator()){
             $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('users')->field('id,avatar')->where('id', $param['id'])->box('users')->find()->check->run('deleteimgedituserFunc')->output->display(':ok')->finish();
@@ -305,7 +305,7 @@ class Admin extends Controller
             $this->app->db->table('users')->where('id', $this->box->get('users.id'))->data('avatar', '')->update()->finish();
         }
     }
-    public function uploadimgedituser($param)
+    public function uploadimgedituser($param = '')
     {
         if($this->request->isPost() && $this->administrator()){
             $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('users')->field('id,avatar')->where('id', $param['id'])->box('users')->find()->upload->setName('file')->check('ext', 'png,jpg,jpeg,gif,webp')->save()->cut(200, 200, '', 'adapt')->box('imgname')->db->table('users')->where('id', $param['id'])->data('avatar', ':box(imgname)')->update()->check->run('uploadimgedituserFunc')->output->display(':box(imgname)')->finish();
@@ -339,7 +339,7 @@ class Admin extends Controller
         $param['publicly'] = $publicly;
         return $param;
     }
-    public function addnewuser($param)
+    public function addnewuser($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['username'], 'require', $this->lang->translate('The username must be filled in.'))->check($param['password'], 'require', $this->lang->translate('The password must be filled in.'))->check($param['username'], 'alphaNumHyphen', $this->lang->translate('The username can only contain letters, numbers and hyphens. And start with a letter.'))->check($param['password'], 'regex | .{8,}', $this->lang->translate('Password length must be no less than 8 characters.'))->inbox('random', md5(time() . rand()))
             ->db->table('users')->field('id')->where('username', $param['username'])->box('hasusername')->find()
@@ -382,7 +382,7 @@ class Admin extends Controller
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->output->assign('share')->assign('group', 'appearance')->assign('current', 'links')->display()->finish();
     }
-    public function addnewlinkexec($param)
+    public function addnewlinkexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the link must be filled in.'))->check($param['url'], 'require', $this->lang->translate('The url of the link must be filled in.'))->check($param['url'], 'url', $this->lang->translate('The URL format is incorrect.'))
             ->db->table('links')->insert([
@@ -394,23 +394,23 @@ class Admin extends Controller
             ])
             ->check->removeSession('uploadimg')->deleteCacheTag('links')->output->display(':ok')->finish();
     }
-    public function putonhome($param)
+    public function putonhome($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('links')->where('id', $param['id'])->data('home', $param['home'])->update()->output->display(':ok')->finish();
     }
-    public function orderlinkshow($param)
+    public function orderlinkshow($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('links')->where('id', $param['id'])->data('sort', $param['sort'])->update()->output->display(':ok')->finish();
     }
-    public function deletelink($param)
+    public function deletelink($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('links')->field('id,image')->where('id', $param['id'])->box('links')->find()->table('links')->where('id', $param['id'])->delete()->check->run('uploadimgeditlinkFunc')->output->display(':ok')->finish();
     }
-    public function editlink($param)
+    public function editlink($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('links')->where('id', $param['id'])->field('id,name,image,url,home,description')->box('links')->find()->output->assign('share')->assign('group', 'appearance')->assign('current', 'links')->assign('links', ':box(links)')->display()->finish();
     }
-    public function editlinkexec($param)
+    public function editlinkexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the link must be filled in.'))->check($param['url'], 'require', $this->lang->translate('The url of the link must be filled in.'))->check($param['url'], 'url', $this->lang->translate('The URL format is incorrect.'))
             ->db->table('links')->where('id', $param['id'])->update([
@@ -421,7 +421,7 @@ class Admin extends Controller
             ])
             ->check->deleteCacheTag('links')->output->display(':ok')->finish();
     }
-    public function deleteimgeditlink($param)
+    public function deleteimgeditlink($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('links')->field('id,image')->where('id', $param['id'])->box('links')->find()->check->run('deleteimgeditlinkFunc')->output->display(':ok')->finish();
     }
@@ -437,7 +437,7 @@ class Admin extends Controller
             $this->app->db->table('links')->where('id', $this->box->get('links.id'))->data('image', '')->update()->finish();
         }
     }
-    public function uploadimgeditlink($param)
+    public function uploadimgeditlink($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('links')->field('id,image')->where('id', $param['id'])->box('links')->find()->upload->setName('file')->check('ext', 'png,jpg,jpeg,gif,webp')->save()->box('imgname')->cut(0, $this->linkheight, '', 'adaptRaw')->db->table('links')->where('id', $param['id'])->data('image', ':box(imgname)')->update()->check->run('uploadimgeditlinkFunc')->output->display(':box(imgname)')->finish();
     }
@@ -462,7 +462,7 @@ class Admin extends Controller
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->output->assign('share')->assign('group', 'appearance')->assign('current', 'slideshow')->display()->finish();
     }
-    public function addnewslidegroupexec($param)
+    public function addnewslidegroupexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the slide group must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the slide group must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check($param['width'], 'require', $this->lang->translate('The width must be filled in.'))->check($param['height'], 'require', $this->lang->translate('The height must be filled in.'))->check($param['width'], 'integer', $this->lang->translate('The width can only be an integer.'))->check($param['height'], 'integer', $this->lang->translate('The height can only be an integer.'))
             ->db->table('slidegroup')->field('id')->where('slug', $param['slug'])->box('hasslug')->find()
@@ -476,11 +476,11 @@ class Admin extends Controller
             ])
             ->output->display(':ok')->finish();
     }
-    public function editslidegroup($param)
+    public function editslidegroup($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('slidegroup')->where('id', $param['id'])->field('id,name,slug,width,height,description')->box('slidegroup')->find()->output->assign('share')->assign('group', 'appearance')->assign('current', 'slideshow')->assign('slidegroup', ':box(slidegroup)')->display()->finish();
     }
-    public function editslidegroupexec($param)
+    public function editslidegroupexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the slide group must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the slide group must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check($param['width'], 'require', $this->lang->translate('The width must be filled in.'))->check($param['height'], 'require', $this->lang->translate('The height must be filled in.'))->check($param['width'], 'integer', $this->lang->translate('The width can only be an integer.'))->check($param['height'], 'integer', $this->lang->translate('The height can only be an integer.'))
             ->db->table('slidegroup')->field('id')->where('slug', $param['slug'])->where('slug', '!=', '')->where('id', '!=', $param['id'])->box('hasslug')->find()
@@ -494,7 +494,7 @@ class Admin extends Controller
             ])
             ->output->display(':ok')->finish();
     }
-    public function deleteslidegroup($param)
+    public function deleteslidegroup($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->beginTransaction()->table('slidegroup')->where('id', $param['id'])->delete()->table('slide')->where('gid', $param['id'])->data('gid', 0)->update()->endTransaction()->output->display(':ok')->finish();
     }
@@ -502,7 +502,7 @@ class Admin extends Controller
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('slidegroup')->field('id,name')->order('id ASC')->box('slidegroup')->select()->output->assign('share')->assign('group', 'appearance')->assign('current', 'slideshow')->assign('slidegroup', ':box(slidegroup)')->display()->finish();
     }
-    public function addnewslideexec($param)
+    public function addnewslideexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the slide must be filled in.'))->check($this->session->has('uploadimg'), $this->lang->translate('Image must be uploaded.'))
             ->db->table('slide')->insert([
@@ -527,15 +527,15 @@ class Admin extends Controller
         }
         $this->app->img->cut($width, $height, $this->rootDir . $this->DS . $uploadimg, '', 'adapt')->finish();
     }
-    public function orderslideshow($param)
+    public function orderslideshow($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('slide')->where('id', $param['id'])->data('sort', $param['sort'])->update()->output->display(':ok')->finish();
     }
-    public function editslide($param)
+    public function editslide($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('slidegroup')->field('id,name')->order('id ASC')->box('slidegroup')->select()->table('slide')->where('id', $param['id'])->field('id,name,gid,image,url,description')->box('slide')->find()->output->assign('share')->assign('group', 'appearance')->assign('current', 'slideshow')->assign('slidegroup', ':box(slidegroup)')->assign('slide', ':box(slide)')->display()->finish();
     }
-    public function editslideexec($param)
+    public function editslideexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the slide must be filled in.'))
             ->db->table('slide')->field('image')->where('id', $param['id'])->box('hasimage')->find()
@@ -548,11 +548,11 @@ class Admin extends Controller
             ])
             ->check->param($param['slidegroup'], ':box(hasimage.image)')->run('resizeImgFun')->deleteCacheTag('slide')->output->display(':ok')->finish();
     }
-    public function uploadimgeditslide($param)
+    public function uploadimgeditslide($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('slide')->field('id,image')->where('id', $param['id'])->box('slide')->find()->upload->setName('file')->check('ext', 'png,jpg,jpeg,gif,webp')->save()->box('imgname')->db->table('slide')->where('id', $param['id'])->data('image', ':box(imgname)')->update()->check->run('uploadimgeditslideFunc')->output->display(':box(imgname)')->finish();
     }
-    public function deleteimgeditslide($param)
+    public function deleteimgeditslide($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('slide')->field('id,image')->where('id', $param['id'])->box('slide')->find()->check->run('deleteimgeditslideFunc')->output->display(':ok')->finish();
     }
@@ -577,11 +577,11 @@ class Admin extends Controller
             }
         }
     }
-    public function deleteslide($param)
+    public function deleteslide($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('slide')->field('id,image')->where('id', $param['id'])->box('slide')->find()->table('slide')->where('id', $param['id'])->delete()->check->run('uploadimgeditslideFunc')->deleteCacheTag('slide')->output->display(':ok')->finish();
     }
-    public function attach($param)
+    public function attach($param = '')
     {
         if($this->request->isPost()){
             if($param['_theme'] != '_non'){
@@ -613,7 +613,7 @@ class Admin extends Controller
     {
         $this->view->assign('share')->assign('group', 'appearance')->assign('current', 'menus')->assign('menu', unserialize($this->getTake('jswrt-menu')))->display();
     }
-    public function saveprimarymenu($param)
+    public function saveprimarymenu($param = '')
     {
         if($this->request->isPost() && $this->administrator()){
             if(!preg_match('/^[A-Za-z0-9\-\_]+$/', $param['slug'])){
@@ -654,7 +654,7 @@ class Admin extends Controller
         }
         exit();
     }
-    public function savesecondarymenu($param)
+    public function savesecondarymenu($param = '')
     {
         if($this->request->isPost() && $this->administrator()){
             if(!preg_match('/^[A-Za-z0-9\-\_]+$/', $param['slug'])){
@@ -835,7 +835,7 @@ class Admin extends Controller
         }
         exit();
     }
-    public function addmenu($param)
+    public function addmenu($param = '')
     {
         if($this->request->isPost() && $this->administrator()){
             $menutype = $param['menutype'];
@@ -852,7 +852,7 @@ class Admin extends Controller
         }
         exit();
     }
-    public function addmenuexec($param)
+    public function addmenuexec($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the menu must be filled in.'))->check($param['menuurl'], 'require', $this->lang->translate('Menu URL must be selected or filled in.'))->check($this->hascustom($param['menuurl'], $param['custom']), $this->lang->translate('Menu URL must be selected or filled in.'))->check($param['custom'], 'url', $this->lang->translate('The URL format is incorrect.'))
             ->db->table('menu')->insert([
@@ -907,7 +907,7 @@ class Admin extends Controller
         }
         return $events;
     }
-    public function showmenu($param)
+    public function showmenu($param = '')
     {
         if($this->request->isPost() && $this->administrator()){
             $menutype = $param['menutype'];
@@ -924,15 +924,15 @@ class Admin extends Controller
         }
         exit();
     }
-    public function ordermenu($param)
+    public function ordermenu($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('menu')->where('id', $param['id'])->data('sort', $param['sort'])->update()->output->display(':ok')->finish();
     }
-    public function menuicon($param)
+    public function menuicon($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('menu')->where('id', $param['id'])->data('icon', Filter::weedout(str_replace('"', '\'', $param['icon'])))->update()->output->display(':ok')->finish();
     }
-    public function deletemenu($param)
+    public function deletemenu($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('menu')->field('parent')->where('id', $param['id'])->box('menu')->find()->beginTransaction()->table('menu')->where('id', $param['id'])->delete()->table('menu')->where('parent', $param['id'])->data('parent', ':box(menu.parent)')->update()->endTransaction()->output->display(':ok')->finish();
     }
@@ -1056,7 +1056,7 @@ class Admin extends Controller
         }
         $this->view->assign('share')->assign('group', 'plugins')->assign('current', 'installedplugins')->assign('plugins', $plugins)->display();
     }
-    public function putonplugin($param)
+    public function putonplugin($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->param($param)->run('putonpluginFunc')->output->display(':ok')->finish();
     }
@@ -1086,11 +1086,11 @@ class Admin extends Controller
             $this->app->writeCustomize('site', 'plugins', $opened);
         }
     }
-    public function deleteplugin($param)
+    public function deleteplugin($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->param($param)->run('deletepluginFunc')->output->display(':ok')->finish();
     }
-    public function deletepluginFunc($param)
+    public function deletepluginFunc($param = '')
     {
         $pluginPath = $this->appDir . $this->DS . 'plugins' . $this->DS . $param['plugin'];
         $opened = $this->app->getConfig('plugins');
@@ -1277,7 +1277,7 @@ class Admin extends Controller
     {
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('pages')->field('id,title,template,thumbnail,views,createtime,editime,status,parent,sort')->order('sort ASC')->box('pages')->select()->check->filter(':box(pages)', 'filterFunc')->output->assign('share')->assign('group', 'pages')->assign('current', 'allpages')->assign('pages', ':box(pages)')->display()->finish();
     }
-    public function editpage($param)
+    public function editpage($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the page must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the page must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check($param['content'], 'require', $this->lang->translate('The content of the page must be filled in.'))
             ->db->table('pages')->field('id')->where('slug', $param['slug'])->where('slug', '!=', '')->where('id', '!=', $param['id'])->box('hasslug')->find()
@@ -1298,7 +1298,7 @@ class Admin extends Controller
             ->event->listen('editPage', ['id' => $param['id'], 'publish' => ($this->editor() && $param['status'] == 1) ? true : false])->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('pages'))->inbox('id', $param['id'])->db->table('pages')->field('id,title,parent')->box('pages')->order('sort ASC')->select()->table('pages')->field('id,title,slug,keyword,template,thumbnail,editime,visibility,password,status,parent,summary,content')->where('id', $param['id'])->box('page')->find()->check->filter(':box(pages)', 'filternochildFunc')->filter(':box(page)', 'postFunc')->output->assign('share')->assign('group', 'pages')->assign('current', 'allpages')->assign('pages', ':box(pages)')->assign('templates', ':box(templates)')->assign('page', ':box(page)')->display()->finish();
     }
-    public function addnewpage($param)
+    public function addnewpage($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the page must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the page must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check($param['content'], 'require', $this->lang->translate('The content of the page must be filled in.'))
             ->db->table('pages')->field('id')->where('slug', $param['slug'])->where('slug', '!=', '')->box('hasslug')->find()
@@ -1321,11 +1321,11 @@ class Admin extends Controller
             ->check->removeSession('uploadimg')->event->listen('addNewPage', ['id' => $this->box->get('pageid'), 'publish' => ($this->editor() && $param['status'] == 1) ? true : false])->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('pages'))->db->table('pages')->field('id,title,parent')->order('sort ASC')->box('pages')->select()->check->filter(':box(pages)', 'filterFunc')->removeSession('uploadimg')->output->assign('share')->assign('group', 'pages')->assign('current', 'addnewpage')->assign('pages', ':box(pages)')->assign('templates', ':box(templates)')->display()->finish();
     }
-    public function deletepage($param)
+    public function deletepage($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('pages')->field('thumbnail,parent,content')->where('id', $param['id'])->box('page')->find()->beginTransaction()->table('pages')->where('id', $param['id'])->delete()->table('pages')->where('parent', $param['id'])->data('parent', ':box(page.parent)')->update()->endTransaction()->check->run('delpageimgFunc', ':box(transactionIsOk)', true)->output->display(':ok')->finish();
     }
-    public function orderpages($param)
+    public function orderpages($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('pages')->where('id', $param['id'])->data('sort', $param['sort'])->update()->output->display(':ok')->finish();
     }
@@ -1340,7 +1340,7 @@ class Admin extends Controller
                 ->output->assign('share')->assign('group', 'posts')->assign('current', 'recyclebin')->assign('posts', ':box(posts)')->display()->finish();
         }
     }
-    public function deletepermanently($param)
+    public function deletepermanently($param = '')
     {
         if($this->editor()){
             $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('posts')->field('id,uid,thumbnail,content')->where('id', $param['id'])->data('trash', 1)->data('trashuid', $this->session->get('id'))->box('post')->find()->db->table('postags')->where('pid', $param['id'])->field('id,tid')->box('postags')->select()->check->stop(':box(post)', '=', 'empty', $this->lang->translate('Insufficient permissions.'))->filter(':box(postags)', 'postagsFunc')->db->beginTransaction()->table('posts')->where('id', $param['id'])->box('delpost')->delete()->table('postags')->where('pid', $param['id'])->delete()->table('tags')->where('id', 'IN', ':box(postags)')->data('quantity', 'quantity-1')->update()->table('users')->where('id', ':box(post.uid)')->data('posts', 'posts-1')->update()->endTransaction()->check->run('delpostimgFunc', ':box(transactionIsOk)', true)->output->display(':ok')->finish();
@@ -1377,7 +1377,7 @@ class Admin extends Controller
             }
         }
     }
-    public function restore($param)
+    public function restore($param = '')
     {
         if($this->editor()){
             $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('trash', 0)->data('trashuid', 0)->update()->check->deleteCacheTag('posts' . $param['id'])->output->display(':ok')->finish();
@@ -1386,7 +1386,7 @@ class Admin extends Controller
             $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->field('id')->where('id', $param['id'])->where('uid', $this->session->get('id'))->box('hasmy')->find()->check->stop(':box(hasmy)', '==', 'empty', $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('trash', 0)->data('trashuid', 0)->update()->check->deleteCacheTag('posts' . $param['id'])->output->display(':ok')->finish();
         }
     }
-    public function totrash($param)
+    public function totrash($param = '')
     {
         if($this->editor()){
             $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('trash', 1)->data('trashuid', $this->session->get('id'))->update()->check->deleteCacheTag('posts' . $param['id'])->output->display(':ok')->finish();
@@ -1395,7 +1395,7 @@ class Admin extends Controller
             $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->field('id')->where('id', $param['id'])->where('uid', $this->session->get('id'))->box('hasmy')->find()->check->stop(':box(hasmy)', '==', 'empty', $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('trash', 1)->data('trashuid', $this->session->get('id'))->update()->check->deleteCacheTag('posts' . $param['id'])->output->display(':ok')->finish();
         }
     }
-    public function allposts($param)
+    public function allposts($param = '')
     {
 		unset($param['page']);
         if($this->editor()){
@@ -1466,19 +1466,19 @@ class Admin extends Controller
         }
         return $param;
     }
-    public function review($param)
+    public function review($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->data('status', $param['review'] == 1 ? 3 : 2)->update()->event->listen('review', ['id' => $param['id'], 'review' => $param['review'] == 1 ? true : false])->output->display(':ok')->finish();
     }
-    public function putontop($param)
+    public function putontop($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->where('status', 3)->data('top', $param['istop'])->update()->output->display(':ok')->finish();
     }
-    public function recommended($param)
+    public function recommended($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->where('id', $param['id'])->where('status', 3)->data('recommend', $param['recommended'])->update()->output->display(':ok')->finish();
     }
-    public function editpost($param)
+    public function editpost($param = '')
     {
         if($this->editor()){
             !$this->request->isPost() || $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the post must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the post must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check($param['content'], 'require', $this->lang->translate('The content of the post must be filled in.'))->check($param['category'], 'require', $this->lang->translate('The category must be selected.'))->inbox('tags', $param['tags'])->inbox('oldtags', $param['oldtags'])->inbox('postid', $param['id'])
@@ -1532,7 +1532,7 @@ class Admin extends Controller
         $param['content'] = str_replace('&', '&amp;', $param['content']);
         return $param;
     }
-    public function addnewpost($param)
+    public function addnewpost($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->check($param['title'], 'require', $this->lang->translate('The title of the post must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the post must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))->check(!$this->inreserved($param['slug']), $this->lang->translate('The slug is not available, please change and continue.'))->check($param['content'], 'require', $this->lang->translate('The content of the post must be filled in.'))->check($param['category'], 'require', $this->lang->translate('The category must be selected.'))->inbox('tags', isset($param['tags']) ? $param['tags'] : '')
             ->db->table('posts')->field('id')->where('slug', $param['slug'])->where('slug', '!=', '')->box('hasslug')->find()
@@ -1656,11 +1656,11 @@ class Admin extends Controller
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check->run('deleteimgFunc')->output->display(':ok')->finish();
     }
-    public function uploadimgeditpage($param)
+    public function uploadimgeditpage($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('pages')->field('id,thumbnail')->where('id', $param['id'])->box('pages')->find()->upload->setName('file')->check('ext', 'png,jpg,jpeg,gif,webp')->save()->box('imgname')->cut($this->getTake('thumbnail-width'), $this->getTake('thumbnail-height'), $this->rootDir . $this->DS . str_replace('.', '_sm.', $this->box->get('imgname')), 'adaptRaw')->cut($this->getTake('large-width'), $this->getTake('large-height'), $this->rootDir . $this->DS . str_replace('.', '_lg.', $this->box->get('imgname')), 'adaptRaw')->cut($this->getTake('medium-width'), $this->getTake('medium-height'), '', 'adaptRaw')->db->table('pages')->where('id', $param['id'])->data('thumbnail', ':box(imgname)')->update()->check->run('deleteuploadimgeditpageFunc')->output->display(':box(imgname)')->finish();
     }
-    public function uploadimgedit($param)
+    public function uploadimgedit($param = '')
     {
         if($this->editor()){
             $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->field('id,uid,thumbnail')->where('id', $param['id'])->box('post')->find()->upload->setName('file')->check('ext', 'png,jpg,jpeg,gif,webp')->save()->box('imgname')->cut($this->getTake('thumbnail-width'), $this->getTake('thumbnail-height'), $this->rootDir . $this->DS . str_replace('.', '_sm.', $this->box->get('imgname')), 'adaptRaw')->cut($this->getTake('large-width'), $this->getTake('large-height'), $this->rootDir . $this->DS . str_replace('.', '_lg.', $this->box->get('imgname')), 'adaptRaw')->cut($this->getTake('medium-width'), $this->getTake('medium-height'), '', 'adaptRaw')->db->table('posts')->where('id', $param['id'])->data('thumbnail', ':box(imgname)')->update()->check->run('deleteuploadimgeditFunc')->output->display(':box(imgname)')->finish();
@@ -1687,7 +1687,7 @@ class Admin extends Controller
             }
         }
     }
-    public function deleteimgeditpage($param)
+    public function deleteimgeditpage($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('pages')->field('id,thumbnail')->where('id', $param['id'])->box('pages')->find()->check->run('deleteimgeditpageFunc')->output->display(':ok')->finish();
     }
@@ -1707,7 +1707,7 @@ class Admin extends Controller
             $this->app->db->table('pages')->where('id', $this->box->get('pages.id'))->data('thumbnail', '')->update()->finish();
         }
     }
-    public function deleteimgedit($param)
+    public function deleteimgedit($param = '')
     {
         $this->app->entrance->check('post')->check($this->contributor(), $this->lang->translate('Insufficient permissions.'))->db->table('posts')->field('id,uid,thumbnail')->where('id', $param['id'])->box('post')->find()->check->run('deleteimgeditFunc')->output->display(':ok')->finish();
     }
@@ -1749,7 +1749,7 @@ class Admin extends Controller
         }
         $this->session->remove('uploadimg');
     }
-    public function addnewtag($param)
+    public function addnewtag($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the tag must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the tag must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))
             ->db->table('tags')->field('id')->where('name', $param['name'])->box('hasname')->find()
@@ -1766,15 +1766,25 @@ class Admin extends Controller
             ->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('tags'))->output->assign('share')->assign('group', 'tags')->assign('current', 'addnewtag')->assign('templates', ':box(templates)')->display()->finish();
     }
-    public function alltags()
+    public function alltags($param = '')
     {
-        $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('tags')->field('id,name,slug,template,quantity,description')->order('id DESC')->paging($this->per)->box('tags')->select()->output->assign('share')->assign('group', 'tags')->assign('current', 'alltags')->assign('tags', ':box(tags)')->display()->finish();
+		unset($param['page']);
+        if(empty($param)){
+            $param = [
+                'keywords' => '',
+                'slug' => ''
+            ];
+            $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('tags')->field('id,name,slug,template,quantity,description')->order('id DESC')->paging($this->per)->box('tags')->select()->output->assign('share')->assign('group', 'tags')->assign('current', 'alltags')->assign('tags', ':box(tags)')->assign('search', $param)->assign('isearch', false)->display()->finish();
+        }
+        else{
+            $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('tags')->field('id,name,slug,template,quantity,description')->where('name', 'LIKE', '%' . $param['keywords'] . '%')->where('slug', 'LIKE', '%' . $param['slug'] . '%')->order('id DESC')->paging($this->per)->box('tags')->select()->output->assign('share')->assign('group', 'tags')->assign('current', 'alltags')->assign('tags', ':box(tags)')->assign('search', $param)->assign('isearch', true)->display()->finish();
+        }
     }
-    public function deletetag($param)
+    public function deletetag($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->beginTransaction()->table('tags')->where('id', $param['id'])->delete()->table('postags')->where('tid', $param['id'])->delete()->endTransaction()->output->display(':ok')->finish();
     }
-    public function edittag($param)
+    public function edittag($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the tag must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the tag must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))
             ->db->table('tags')->field('id')->where('name', $param['name'])->where('id', '!=', $param['id'])->box('hasname')->find()
@@ -1791,7 +1801,7 @@ class Admin extends Controller
             ->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('tags'))->db->table('tags')->field('id,name,slug,keyword,template,description')->where('id', $param['id'])->box('tag')->find()->output->assign('share')->assign('group', 'tags')->assign('current', 'addnewtag')->assign('templates', ':box(templates)')->assign('tag', ':box(tag)')->display()->finish();
     }
-    public function addnewcategory($param)
+    public function addnewcategory($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the category must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the category must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))
             ->db->table('categories')->field('id')->where('name', $param['name'])->box('hasname')->find()
@@ -1809,7 +1819,7 @@ class Admin extends Controller
             ->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('categories'))->db->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->select()->check->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'categories')->assign('current', 'addnewcategory')->assign('categories', ':box(categories)')->assign('templates', ':box(templates)')->display()->finish();
     }
-    public function addfirstcategory($param)
+    public function addfirstcategory($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the category must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the category must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))
             ->db->table('categories')->field('id')->where('name', $param['name'])->box('hasname')->find()
@@ -1828,7 +1838,7 @@ class Admin extends Controller
     {
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->db->table('categories')->field('id,name,slug,template,description,sort,parent')->order('sort ASC')->box('categories')->select()->check->filter(':box(categories)', 'filterFunc')->output->assign('share')->assign('group', 'categories')->assign('current', 'allcategories')->assign('categories', ':box(categories)')->display()->finish();
     }
-    public function editcategory($param)
+    public function editcategory($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['name'], 'require', $this->lang->translate('The name of the category must be filled in.'))->check($param['slug'], 'require', $this->lang->translate('The slug of the category must be filled in.'))->check($param['slug'], 'alphadash', $this->lang->translate('The slug can only contain letters, numbers and hyphens.'))
             ->db->table('categories')->field('id')->where('name', $param['name'])->where('id', '!=', $param['id'])->box('hasname')->find()
@@ -1846,11 +1856,11 @@ class Admin extends Controller
             ->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->inbox('templates', $this->gettemplate('categories'))->inbox('id', $param['id'])->db->table('categories')->field('id,name,parent')->order('sort ASC')->box('categories')->select()->table('categories')->field('id,name,slug,keyword,template,description,parent')->where('id', $param['id'])->box('category')->find()->check->filter(':box(categories)', 'filternochildFunc')->output->assign('share')->assign('group', 'categories')->assign('current', 'addnewcategory')->assign('categories', ':box(categories)')->assign('category', ':box(category)')->assign('templates', ':box(templates)')->display()->finish();
     }
-    public function deletecategory($param)
+    public function deletecategory($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('categories')->field('parent')->where('id', $param['id'])->box('parent')->find()->beginTransaction()->table('categories')->where('id', $param['id'])->delete()->table('categories')->where('parent', $param['id'])->data('parent', ':box(parent.parent)')->update()->table('posts')->where('cid', $param['id'])->data('cid', 0)->update()->endTransaction()->output->display(':ok')->finish();
     }
-    public function ordercategories($param)
+    public function ordercategories($param = '')
     {
         $this->app->entrance->check('post')->check($this->editor(), $this->lang->translate('Insufficient permissions.'))->check($param['id'], 'require', $this->lang->translate('Parameters are missing.'))->db->table('categories')->where('id', $param['id'])->data('sort', $param['sort'])->update()->output->display(':ok')->finish();
     }
@@ -2063,7 +2073,7 @@ class Admin extends Controller
             return $this->lang->translate('The file was not found.');
         }
     }
-    public function restorebackup($param)
+    public function restorebackup($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->param($param['file'])->run('restorebackupFunc')->box('isrestore')->output->display(':box(isrestore)')->finish();
     }
@@ -2110,7 +2120,7 @@ class Admin extends Controller
             return $this->lang->translate('Invalid file.');
         }
     }
-    public function deletebackup($param)
+    public function deletebackup($param = '')
     {
         $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check->param($param['file'])->run('deletebackupFunc')->output->display(':ok')->finish();
     }
@@ -2123,7 +2133,7 @@ class Admin extends Controller
             @unlink($backupfile);
         }
     }
-    public function visit($param)
+    public function visit($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['siteAddress'], 'url', $this->lang->translate('Incorrect site address format'))->config->writeCustomize('site', [
             'siteTitle' => $param['siteTitle'],
@@ -2137,7 +2147,7 @@ class Admin extends Controller
         ])->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->output->assign('share')->assign('group', 'settings')->assign('current', 'visit')->assign('siteTitle', $this->app->getConfig('siteTitle'))->assign('tagline', $this->app->getConfig('tagline'))->assign('siteKeywords', $this->app->getConfig('siteKeywords'))->assign('siteDescription', $this->app->getConfig('siteDescription'))->assign('siteAddress', $this->app->getConfig('siteAddress'))->assign('language', $this->app->getConfig('language'))->assign('timezone', $this->app->getConfig('timezone'))->display()->finish();
     }
-    public function general($param)
+    public function general($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->check($param['admin-email'], 'require', $this->lang->translate('E-mail must be filled in.'))->check($param['admin-email'], 'email', $this->lang->translate('Incorrect email format.'))->check($param['role'], 'require', $this->lang->translate('The default role of the new user must be selected.'))->inbox('oemail', $this->getTake('admin-email'))->check->param($param)->run('generalFunc')->output->display(':ok')->finish();
         $this->app->entrance->check('get')->check($this->administrator(), $this->lang->translate('Insufficient permissions.'))->db->table('take')->field('id,takename,takevalue')->where('backstage', 'general')->box('general')->select()->check->filter(':box(general)', 'filtergeneralFunc')->output->assign('share')->assign('group', 'settings')->assign('current', 'general')->assign('general', ':box(general)')->assign('rewrite', $this->app->getConfig('rewrite'))->display()->finish();
