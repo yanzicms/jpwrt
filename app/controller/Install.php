@@ -12,9 +12,9 @@ use jsnpp\Database;
 use jsnpp\Tools;
 class Install extends Controller
 {
-    public function index($param)
+    public function index($param = '')
     {
-        $this->app->entrance->check('post')->check->param($param['lang'])->run('changlang')->output->display('ok')->finish();
+        !$this->request->isPost() || $this->app->entrance->check('post')->check->param($param['lang'])->run('changlang')->output->display('ok')->finish();
         $this->view->assign('share')->display();
     }
     public function changlang($lang)
@@ -28,12 +28,12 @@ class Install extends Controller
         $this->app->entrance->check('post')->check->run('detectFunc')->box('result')->output->display(':box(result)')->finish();
         $this->view->assign('share')->display();
     }
-    public function dbinfo($param)
+    public function dbinfo($param = '')
     {
-        $this->app->entrance->check('post')->check->param($param)->run('dbinfoFunc')->box('result')->output->display(':box(result)')->finish();
+        !$this->request->isPost() || $this->app->entrance->check('post')->check->param($param)->run('dbinfoFunc')->box('result')->output->display(':box(result)')->finish();
         $this->view->assign('share')->display();
     }
-    public function account($param)
+    public function account($param = '')
     {
         !$this->request->isPost() || $this->app->entrance->check('post')
             ->check($param['username'], [
